@@ -9,6 +9,7 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE2D]
 
 - Classic XP Minesweeper look and feel
 - Chording support (left+right click to clear around numbers)
+- Supports up to 99x99 grids with 999 mines, unlike the original XP version (24 x 30 with 667 mines)
 
 ## Tech Stack
 
