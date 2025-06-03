@@ -140,16 +140,26 @@ end
 
 function popup.commitCustomInputs()
     local gameplay = require("src.gameplay")
+    local width, height, mines
+
     for _, box in ipairs(inputBoxes) do
         local num = tonumber(box.text)
         if box.label == "Height:" then
-            config.setConfig("gridHeight", popup.clamp(num or 9, 9, 99))   -- Should be 24
+            height = popup.clamp(num or 9, 9, 99) -- Should be 24
         elseif box.label == "Width:" then
-            config.setConfig("gridWidth", popup.clamp(num or 9, 9, 99))    -- Should be 30
+            width = popup.clamp(num or 9, 9, 99)  -- Should be 30
         elseif box.label == "Mines:" then
-            config.setConfig("gridMines", popup.clamp(num or 10, 10, 999)) -- Should be 667
+            mines = num or 10                     -- Should be 667
         end
     end
+
+    local maxMines = (width - 1) * (height - 1)
+    mines = popup.clamp(mines, 10, maxMines)
+
+    config.setConfig("gridHeight", height)
+    config.setConfig("gridWidth", width)
+    config.setConfig("gridMines", mines)
+
     gameplay.startNewGame("custom")
 end
 
