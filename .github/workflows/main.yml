@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 env:
-  CORE_LOVE_PACKAGE_PATH: ./build/game.love
+  CORE_LOVE_PACKAGE_PATH: ./build/ms-love.love
   CORE_LOVE_ARTIFACT_NAME: core_love_package
   PRODUCT_NAME: ms-love
-  BUNDLE_ID: com.example.ms-love
+  BUNDLE_ID: com.kurtsley.ms-love
   OUTPUT_FOLDER: ./build
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
     - name: Move love package to build folder
       run: |
         mkdir -p build
-        mv game.love build/game.love
+        mv ms-love.love build/ms-love.love
 
     - name: Build Linux AppImage
       uses: love-actions/love-actions-linux@v2
@@ -80,7 +80,7 @@ jobs:
       - name: Move love package to build folder
         run: |
           mkdir -p build
-          mv game.love build/game.love
+          mv ms-love.love build/ms-love.love
 
       - name: Build Windows packages
         uses: love-actions/love-actions-windows@v1
@@ -93,6 +93,6 @@ jobs:
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.PRODUCT_NAME }}_x64
+          name: ${{ env.PRODUCT_NAME }}_Winx64
           path: ${{ env.OUTPUT_FOLDER }}/${{ env.PRODUCT_NAME }}_x64.zip
       
