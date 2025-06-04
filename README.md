@@ -25,6 +25,8 @@ Simply grab the release for you OS from the releases page and run, or download L
 
 - Resizable window scaling
 - Middle-click reveal support
+- Sound
+- Persistent state on start
 - Logic cleanup and code formatting
 
 ## About This Project
