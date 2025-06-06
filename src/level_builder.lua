@@ -6,8 +6,6 @@ local config = require("src.config")
 
 local level_builder = {}
 
-local tileSize = 16
-
 function level_builder.buildMap(rows, cols)
     local TOPLEFT = "topleft"
     local TOPRIGHT = "topright"
@@ -141,7 +139,7 @@ function level_builder.buildMap(rows, cols)
     return uiMap
 end
 
-function level_builder.drawTile(type, x, y, side)
+local function drawTile(type, x, y, side)
     -- Must shift right counter border over by one to
     -- try to match the left side, ugh...
     local xOffset = 0
@@ -198,11 +196,11 @@ function level_builder.drawMap(rows, cols)
 
     for y, row in ipairs(uiMap) do
         for x, cell in ipairs(row) do
-            local drawX = (x - 1) * tileSize
-            local drawY = (y - 1) * tileSize + MenuHeight
+            local drawX = (x - 1) * TileSize
+            local drawY = (y - 1) * TileSize + MenuHeight
 
             if cell then
-                level_builder.drawTile(cell.type, drawX, drawY, cell.side)
+                drawTile(cell.type, drawX, drawY, cell.side)
             end
         end
     end

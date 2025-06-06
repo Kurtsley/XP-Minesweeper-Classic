@@ -6,6 +6,7 @@ local board = require("src.board")
 local popup = require("src.popup")
 local file_manager = require("src.file_manager")
 local config = require("src.config")
+local counter = require("src.counter_timer")
 
 local timer = state.timer
 local gameState = state.gameState
@@ -37,10 +38,8 @@ function gameplay.startNewGame(diff)
 
     gameplay.gameStart()
 
-    local tileSize = 16
-
-    local map_width = (config.gridWidth + 2) * tileSize
-    local map_height = (config.gridHeight + 5 + 1) * tileSize
+    local map_width = (config.gridWidth + 2) * TileSize
+    local map_height = (config.gridHeight + 5 + 1) * TileSize
 
     Face_x = (map_width / 2) - 14
 
@@ -78,6 +77,7 @@ function gameplay.gameStart()
     board.initBoard()
     gameState.resetMinecount()
     timer:reset()
+    counter.init()
 end
 
 function gameplay.victory()

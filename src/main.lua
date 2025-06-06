@@ -34,6 +34,7 @@ Board_start_x = 16
 Board_start_y = 80 + MenuHeight
 GameWidth = 0
 GameHeight = 0
+TileSize = 16
 ------------------
 
 function love.keypressed(key)
@@ -85,12 +86,8 @@ function love.draw()
     -- Drawing this color to cover up shifting tiles
     love.graphics.clear(192 / 255, 192 / 255, 192 / 255)
 
-    GameWidth = love.graphics:getWidth()
-    GameHeight = love.graphics:getHeight()
-
     board.drawBoard()
-    counterTimer.drawMineCounter(gameState.getMineCount())
-    counterTimer.drawTimer(timer:getTime())
+    counterTimer.draw(gameState.getMineCount(), timer:getTime())
     faceButton:drawFace()
     game_menu.draw()
     popup.draw()

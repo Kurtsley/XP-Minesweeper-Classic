@@ -33,6 +33,8 @@ function board.initBoard()
         cols = config.gridWidth
     end
 
+    GameWidth, GameHeight = love.graphics.getDimensions()
+
     for r = 1, rows do
         board.grid[r] = {}
         for c = 1, cols do
@@ -175,14 +177,14 @@ function board.gridInteraction()
 
             if mouseX > tileX and mouseX <= tileX + tileWidth and
                 mouseY > tileY and mouseY <= tileY + tileHeight then
-                if love.mouse.isDown(1) and love.mouse.isDown(2) then
+                if (love.mouse.isDown(1) and love.mouse.isDown(2)) or love.mouse.isDown(3) then
                     for _, tile in ipairs(adjacentTiles) do
                         if not tile.isFlagged then
                             tile.isHeld = true
                         end
                     end
                 end
-                if love.mouse.isDown(1) and not tile.isFlagged then
+                if (love.mouse.isDown(1) or love.mouse.isDown(3)) and not tile.isFlagged then
                     tile.isHeld = true
                 else
                     tile.isHeld = false
@@ -253,7 +255,6 @@ end
 
 function board.onMouseReleased(button, heldButtons)
     local Tile = require("src.tile")
-    local game_menu = require("src.game_menu")
 
     local mouseX, mouseY = love.mouse.getPosition()
 
@@ -277,7 +278,7 @@ function board.onMouseReleased(button, heldButtons)
 
         if tile then
             if not tile.isCovered and tile.adjacentMines > 0 then
-                if (button == 1 and heldButtons[2]) or (button == 2 and heldButtons[1]) then
+                if (button == 1 and heldButtons[2]) or (button == 2 and heldButtons[1]) or button == 3 then
                     local flaggedTiles = 0
                     for _, adTile in ipairs(adjacentTiles) do
                         if adTile.isFlagged then

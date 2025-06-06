@@ -2,17 +2,16 @@
 -- Timer and mine counter stuff
 
 local tilesets = require("src.tilesets")
-local state = require("src.state")
-
-local gameState = state.gameState
-local difficulty = state.difficulty
 
 local counterTimer = {}
 
-local counter_y = 48
 local mineCounter_x1 = 23
 local mineCounter_x2 = 39
 local mineCounter_x3 = 55
+local timer_x1 = 0
+local timer_x2 = 0
+local timer_x3 = 0
+local counterY = 48
 
 local function digitQuadsLookup(digit)
     if digit == 1 then
@@ -36,6 +35,12 @@ local function digitQuadsLookup(digit)
     else
         return tilesets.counter.quads.counter_0
     end
+end
+
+function counterTimer.init()
+    timer_x1 = GameWidth - 72
+    timer_x2 = GameWidth - 56
+    timer_x3 = GameWidth - 40
 end
 
 function counterTimer.drawCounter(value, x1, x2, x3, y)
@@ -65,17 +70,10 @@ function counterTimer.resetTimer()
     return 0
 end
 
-function counterTimer.drawMineCounter(mineCount)
-    counterTimer.drawCounter(mineCount, mineCounter_x1, mineCounter_x2, mineCounter_x3, counter_y)
-end
-
-function counterTimer.drawTimer(timer)
-    local timer_x1 = GameWidth - 72
-    local timer_x2 = GameWidth - 56
-    local timer_x3 = GameWidth - 40
-
-    local timeElapsedSeconds = math.ceil(timer)
-    counterTimer.drawCounter(timeElapsedSeconds, timer_x1, timer_x2, timer_x3, counter_y)
+function counterTimer.draw(mineCount, timerCount)
+    local timeElapsedSeconds = math.ceil(timerCount)
+    counterTimer.drawCounter(timeElapsedSeconds, timer_x1, timer_x2, timer_x3, counterY)
+    counterTimer.drawCounter(mineCount, mineCounter_x1, mineCounter_x2, mineCounter_x3, counterY)
 end
 
 return counterTimer
