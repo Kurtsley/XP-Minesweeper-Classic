@@ -7,6 +7,7 @@ local popup = require("src.popup")
 local file_manager = require("src.file_manager")
 local config = require("src.config")
 local counter = require("src.counter_timer")
+local sound = require("src.sound")
 
 local timer = state.timer
 local gameState = state.gameState
@@ -70,6 +71,7 @@ function gameplay.playGame()
             popup.show("HighScore")
         end
         gameState.changeState(gameState.VICTORY)
+        sound.play("clap")
     end
 end
 

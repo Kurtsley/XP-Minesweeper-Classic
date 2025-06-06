@@ -4,6 +4,7 @@
 local board = require("src.board")
 local state = require("src.state")
 local tilesets = require("src.tilesets")
+local sound = require("src.sound")
 
 local gameState = state.gameState
 
@@ -54,6 +55,7 @@ function Tile.revealTile(startRow, startCol)
         if tile.isMine then
             tile.isExploded = true
             gameState.changeState(gameState.GAME_OVER)
+            sound.play("explode")
             return
         end
 

@@ -8,6 +8,7 @@ local difficulty = state.difficulty
 local faceButton = require("src.face")
 local config = require("src.config")
 local level_builder = require("src.level_builder")
+local sound = require("src.sound")
 
 local board = {}
 
@@ -290,6 +291,7 @@ function board.onMouseReleased(button, heldButtons)
                         for _, adTile in ipairs(adjacentTiles) do
                             if not adTile.isFlagged then
                                 Tile.revealTile(adTile.row, adTile.col)
+                                sound.play("pop")
                             end
                         end
                     end
@@ -301,6 +303,7 @@ function board.onMouseReleased(button, heldButtons)
                         gameState.changeState(gameState.PLAYING)
                     end
                     Tile.revealTile(row, col)
+                    sound.play("pop")
                 end
             end
         end
