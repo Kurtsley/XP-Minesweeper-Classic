@@ -70,13 +70,13 @@ function popup.onKeyPressed(key)
                 end
             end
         end
-        if key == "return" or key == "escape" then
+        if key == "return" or key == "escape" or key == "kpenter" then
             for _, box in ipairs(inputBoxes) do
                 box.active = false
             end
         end
     else
-        if key == "return" then
+        if key == "return" or key == "kpenter" then
             for _, btn in ipairs(buttons) do
                 if btn.label == "OK" then
                     if btn.onClick then
