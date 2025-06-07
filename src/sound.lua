@@ -1,6 +1,8 @@
 -- sound.lua
 -- All sound logic
 
+local config = require("src.config")
+
 local sound = {}
 
 local sources = {}
@@ -12,7 +14,9 @@ function sound.load()
 end
 
 function sound.play(name)
-    sources[name]:play()
+    if config.sound then
+        sources[name]:play()
+    end
 end
 
 return sound

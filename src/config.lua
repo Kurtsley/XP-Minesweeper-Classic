@@ -3,6 +3,7 @@
 
 local config = {
     qMarks = false,
+    sound = true,
     gridHeight = 0,
     gridWidth = 0,
     gridMines = 0,
@@ -16,6 +17,10 @@ end
 
 function config.toggleQMarks()
     config.qMarks = not config.qMarks
+end
+
+function config.toggleSound()
+    config.sound = not config.sound
 end
 
 return config

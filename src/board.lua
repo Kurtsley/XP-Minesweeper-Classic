@@ -151,7 +151,7 @@ function board.gridInteraction()
     local game_menu = require("src.game_menu")
     local popup = require("src.popup")
 
-    if (game_menu.gameSubMenuOpen or game_menu.helpSubMenuOpen or
+    if (game_menu.gameSubMenuOpen or game_menu.helpSubMenuOpen or game_menu.optionsSubMenuOpen or
             gameState.is(gameState.GAME_OVER) or popup.shouldShow) then
         return
     end
