@@ -8,7 +8,7 @@ local counterBorderTileSize = 16
 
 local cellImage = love.graphics.newImage("assets/tilesets/WinmineXP.png")
 local counterImage = love.graphics.newImage("assets/tilesets/countersmall.png")
-local faceImage = love.graphics.newImage("assets/tilesets/face28.png")
+local faceImage = love.graphics.newImage("assets/tilesets/facesfixed.png")
 local counterBorderImage = love.graphics.newImage("assets/tilesets/newbordercounter.png")
 local borderImage = love.graphics.newImage("assets/tilesets/bordernew.png")
 
@@ -60,11 +60,11 @@ for name, pos in pairs(counterQuadData) do
 end
 
 local faceQuadData = {
-    surprise = { 0, 0 },
-    glasses = { 28, 0 },
-    pressed = { 56, 0 },
-    normal = { 0, 28 },
-    dead = { 28, 28 },
+    dead = { 0, 0 },
+    pressed = { 28, 0 },
+    normal = { 56, 0 },
+    glasses = { 0, 28 },
+    surprise = { 28, 28 },
 }
 
 local faceQuads = {}
