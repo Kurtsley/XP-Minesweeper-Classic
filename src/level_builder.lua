@@ -9,14 +9,11 @@ local level_builder = {}
 function level_builder.buildMap(rows, cols)
     local TOPLEFT = "topleft"
     local TOPRIGHT = "topright"
-    local LEFTEDGE = "leftedge"
-    local TOP = "topmid"
-    local RIGHTEDGE = "rightedge"
-    local BOTTOM = "bottommid"
+    local LEFTRIGHT = "leftright"
+    local TOPBOTTOMMID = "topbottom"
     local BOTTOMLEFT = "bottomleft"
     local BOTTOMRIGHT = "bottomright"
     local BLANK = "blank"
-    local MIDMID = "midmid"
     local LEFTMID = "leftmid"
     local RIGHTMID = "rightmid"
 
@@ -45,11 +42,11 @@ function level_builder.buildMap(rows, cols)
             uiMap[y][x] = { type = BLANK }
             -- Top
             if y == 1 then
-                uiMap[y][x] = { type = TOP }
+                uiMap[y][x] = { type = TOPBOTTOMMID }
             end
             -- Bottom
             if y == totalHeight then
-                uiMap[y][x] = { type = BOTTOM }
+                uiMap[y][x] = { type = TOPBOTTOMMID }
             end
             -- Left
             if x == 1 then
@@ -58,7 +55,7 @@ function level_builder.buildMap(rows, cols)
                 elseif y == totalHeight then
                     uiMap[y][x] = { type = BOTTOMLEFT }
                 else
-                    uiMap[y][x] = { type = LEFTEDGE }
+                    uiMap[y][x] = { type = LEFTRIGHT }
                 end
             end
             -- Right
@@ -68,7 +65,7 @@ function level_builder.buildMap(rows, cols)
                 elseif y == totalHeight then
                     uiMap[y][x] = { type = BOTTOMRIGHT }
                 else
-                    uiMap[y][x] = { type = RIGHTEDGE }
+                    uiMap[y][x] = { type = LEFTRIGHT }
                 end
             end
             -- Middle
@@ -78,7 +75,7 @@ function level_builder.buildMap(rows, cols)
                 elseif x == totalWidth then
                     uiMap[y][x] = { type = RIGHTMID }
                 else
-                    uiMap[y][x] = { type = MIDMID }
+                    uiMap[y][x] = { type = TOPBOTTOMMID }
                 end
             end
             -- Counter left
@@ -168,26 +165,20 @@ local function drawTile(type, x, y, side)
         love.graphics.draw(tilesets.border.image, tilesets.border.quads.topleft, x, y)
     elseif type == "topright" then
         love.graphics.draw(tilesets.border.image, tilesets.border.quads.topright, x, y)
-    elseif type == "leftedge" then
-        love.graphics.draw(tilesets.border.image, tilesets.border.quads.leftedge, x, y)
-    elseif type == "topmid" then
-        love.graphics.draw(tilesets.border.image, tilesets.border.quads.topmid, x, y)
-    elseif type == "rightedge" then
-        love.graphics.draw(tilesets.border.image, tilesets.border.quads.rightedge, x, y)
-    elseif type == "bottommid" then
-        love.graphics.draw(tilesets.border.image, tilesets.border.quads.bottommid, x, y)
     elseif type == "bottomleft" then
         love.graphics.draw(tilesets.border.image, tilesets.border.quads.bottomleft, x, y)
     elseif type == "bottomright" then
         love.graphics.draw(tilesets.border.image, tilesets.border.quads.bottomright, x, y)
     elseif type == "blank" then
         love.graphics.draw(tilesets.border.image, tilesets.border.quads.blank, x, y)
-    elseif type == "midmid" then
-        love.graphics.draw(tilesets.border.image, tilesets.border.quads.midmid, x, y)
     elseif type == "leftmid" then
         love.graphics.draw(tilesets.border.image, tilesets.border.quads.leftmid, x, y)
     elseif type == "rightmid" then
         love.graphics.draw(tilesets.border.image, tilesets.border.quads.rightmid, x, y)
+    elseif type == "leftright" then
+        love.graphics.draw(tilesets.border.image, tilesets.border.quads.leftright, x, y)
+    elseif type == "topbottom" then
+        love.graphics.draw(tilesets.border.image, tilesets.border.quads.topbottom, x, y)
     end
 end
 
