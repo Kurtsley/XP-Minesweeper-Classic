@@ -1,6 +1,6 @@
 -- Conf file
 function love.conf(t)
-    t.window.title = "MinesweeperXP Classic"
+    t.window.title = "XP Minesweeper Classic"
     t.window.icon = "assets/icons/icon-small.png"
     t.window.width = 176
     t.window.height = 264
@@ -10,7 +10,7 @@ function love.conf(t)
     t.modules.physics = false
 
     t.releases = {
-        title = "ms-love",
+        title = "msxp-classic",
         version = "1.1.1",
         author = "Kurtsley",
         email = "kurtsley@gmail.com",
