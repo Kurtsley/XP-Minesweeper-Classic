@@ -1,7 +1,7 @@
 -- Conf file
 function love.conf(t)
     t.window.title = "XP Minesweeper Classic"
-    t.window.icon = "assets/icons/icon-small.png"
+    t.window.icon = "assets/icons/flagicon-small.png"
     t.window.width = 176
     t.window.height = 264
     t.window.vsync = true

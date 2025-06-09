@@ -53,7 +53,7 @@ jobs:
         bundle-id: ${{ env.BUNDLE_ID }}
         description: Classic Windows XP Minesweeper clone
         version-string: "1.1.1"
-        icon-path: ./assets/icons/ms-love.png
+        icon-path: ./assets/icons/flagicon.png
         love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
         output-folder: ${{ env.OUTPUT_FOLDER }}
 
@@ -84,7 +84,7 @@ jobs:
         uses: love-actions/love-actions-windows@v1
         with:
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
-          icon-path: ./assets/icons/favicon.ico
+          icon-path: ./assets/icons/flagicon.ico
           product-name: ${{ env.PRODUCT_NAME }}
           output-folder: ${{ env.OUTPUT_FOLDER }}
 
