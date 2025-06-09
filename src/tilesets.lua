@@ -12,6 +12,12 @@ local faceImage = love.graphics.newImage("assets/tilesets/facesfixed.png")
 local counterBorderImage = love.graphics.newImage("assets/tilesets/newbordercounter.png")
 local borderImage = love.graphics.newImage("assets/tilesets/bordernew.png")
 
+cellImage:setFilter("nearest", "nearest")
+counterImage:setFilter("nearest", "nearest")
+faceImage:setFilter("nearest", "nearest")
+counterBorderImage:setFilter("nearest", "nearest")
+borderImage:setFilter("nearest", "nearest")
+
 
 local cellQuadData = {
     cell_1 = { 0, 0 },

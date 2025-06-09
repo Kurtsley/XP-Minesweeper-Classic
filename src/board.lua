@@ -34,8 +34,6 @@ function board.initBoard()
         cols = config.gridWidth
     end
 
-    GameWidth, GameHeight = love.graphics.getDimensions()
-
     for r = 1, rows do
         board.grid[r] = {}
         for c = 1, cols do

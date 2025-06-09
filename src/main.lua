@@ -14,6 +14,7 @@ local game_menu = require("src.game_menu")
 local popup = require("src.popup")
 local file_manager = require("src.file_manager")
 local sound = require("src.sound")
+local windowing = require("src.windowing")
 
 local gameState = state.gameState
 local timer = state.timer
@@ -63,6 +64,9 @@ local states = {
 
 function love.load()
     math.randomseed(os.time())
+    GameWidth, GameHeight = love.graphics.getDimensions()
+
+    windowing.centerWindow()
     sound.load()
     game_menu.load()
     popup.load()

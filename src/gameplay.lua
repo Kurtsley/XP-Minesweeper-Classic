@@ -8,6 +8,7 @@ local file_manager = require("src.file_manager")
 local config = require("src.config")
 local counter = require("src.counter_timer")
 local sound = require("src.sound")
+local windowing = require("src.windowing")
 
 local timer = state.timer
 local gameState = state.gameState
@@ -40,19 +41,16 @@ function gameplay.startNewGame(diff)
     gameplay.gameStart()
 
     local map_width = (config.gridWidth + 2) * TileSize
-    local map_height = (config.gridHeight + 5 + 1) * TileSize
+    local map_height = (config.gridHeight + 5 + 1) * TileSize + MenuHeight
 
     Face_x = (map_width / 2) - 14
 
-    local x, y = love.window.getPosition()
+    local x, y, displayIndex = love.window.getPosition()
 
-    love.window.setMode(map_width, map_height + MenuHeight, {
-        fullscreen = false,
-        resizable = false,
-        vsync = true,
-        highdpi = true,
-    })
-    love.window.setPosition(x, y)
+    windowing.setModeSafe(map_width, map_height)
+    love.window.setPosition(x, y, displayIndex)
+
+    GameWidth, GameHeight = love.graphics.getDimensions()
 
     gameState.changeState(gameState.NEW_GAME)
 end

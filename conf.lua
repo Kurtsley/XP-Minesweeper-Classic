@@ -4,6 +4,8 @@ function love.conf(t)
     t.window.icon = "assets/icons/icon-small.png"
     t.window.width = 176
     t.window.height = 264
+    t.window.vsync = true
+    t.window.highdpi = false
     t.modules.joystick = false
     t.modules.physics = false
 
