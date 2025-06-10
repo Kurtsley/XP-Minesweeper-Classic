@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- tile.lua
 -- Handles tile drawing, revealing, and logic
 

@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- config.lua
 -- Handles config settings
 

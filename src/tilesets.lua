@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- tilesets.lua
 -- Load and export the tilesets
 

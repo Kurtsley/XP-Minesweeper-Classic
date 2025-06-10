@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- inputhandlers.lua
 -- Handles the input callbacks
 

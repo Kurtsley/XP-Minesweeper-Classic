@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- state.lua
 -- Handles all gamestates and counts
 

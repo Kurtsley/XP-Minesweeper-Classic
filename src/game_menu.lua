@@ -1,5 +1,7 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- game_menu.lua
--- Old fashioned game menu, game and help
+-- Old fashioned game menu, game, options, and help
 
 local gameplay = require("src.gameplay")
 local state = require("src.state")

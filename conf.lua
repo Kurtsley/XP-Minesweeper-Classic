@@ -1,4 +1,7 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- Conf file
+
 function love.conf(t)
     t.window.title = "XP Minesweeper Classic"
     t.window.icon = "assets/icons/flagicon-small.png"

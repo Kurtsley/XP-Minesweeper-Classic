@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- input.lua
 -- Handle all mouse or touch inputs
 

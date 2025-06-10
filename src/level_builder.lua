@@ -1,8 +1,9 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- level_builder.lua
 -- Handles building of levels
 
 local tilesets = require("src.tilesets")
-local config = require("src.config")
 
 local level_builder = {}
 

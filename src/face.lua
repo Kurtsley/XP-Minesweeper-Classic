@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- face.lua
 -- Handles face button logic, state, and drawing
 

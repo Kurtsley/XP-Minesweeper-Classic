@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- windowing.lua
 -- Game window centering and placement
 

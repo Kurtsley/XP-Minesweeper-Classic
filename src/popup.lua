@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- popup.lua
 -- Shows a popup at victory or best times, or even the about page
 

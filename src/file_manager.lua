@@ -1,3 +1,5 @@
+-- MIT License, Copyright (c) 2025 Kurtsley
+
 -- file_manager.lua
 -- Handles saving and loading scores
 

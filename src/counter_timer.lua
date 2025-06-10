@@ -1,4 +1,6 @@
--- counter.lua
+-- MIT License, Copyright (c) 2025 Kurtsley
+
+-- counter_timer.lua
 -- Timer and mine counter stuff
 
 local tilesets = require("src.tilesets")
