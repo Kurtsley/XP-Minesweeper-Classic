@@ -1,10 +1,9 @@
 
-# XP Minesweeper (in LÖVE2D)
+# XP Minesweeper Classic (in LÖVE)
 
-A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE2D](https://love2d.org/).
+A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](https://love2d.org/).
 
-![Screenshot 2025-06-08 222102](https://github.com/user-attachments/assets/35ce8b3d-34ab-45e9-b487-dd8be4ad811e)
-
+![ms-screenshot-small](https://github.com/user-attachments/assets/8c7ed898-50b4-43fd-807b-4f2c9ad4f8c1)
 
 ## Features
 
