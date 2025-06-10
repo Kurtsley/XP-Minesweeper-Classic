@@ -212,7 +212,7 @@ function game_menu.load()
     helpSubItems = {
         {
             label = "About",
-            x = helpsubX,
+            x = menuPosX(helpsubX, helpsubW),
             y = helpsubY + 2,
             w = helpsubW,
             h = MenuHeight,
@@ -228,7 +228,7 @@ function game_menu.load()
     optionsSubItems = {
         {
             label = "Marks",
-            x = optionssubX,
+            x = menuPosX(optionssubX, optionssubW),
             y = optionssubY + 2,
             w = optionssubW,
             h = MenuHeight,
