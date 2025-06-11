@@ -531,7 +531,7 @@ function game_menu.draw()
     love.graphics.line(0, MenuHeight + 1, GameWidth, MenuHeight + 1)
 
     for _, item in ipairs(items) do
-        local hovered = withinItem(item.x, item.y, item.w, item.h)
+        local hovered = withinItem(item.x, item.y, item.w, item.h) and not popup.shouldShow
         local color = hovered and item.hoverColor or item.normalColor
         -- Box
         love.graphics.setColor(color)
