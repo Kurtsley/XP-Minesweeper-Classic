@@ -19,6 +19,7 @@ local popup = {
 
 local buttons = {}
 local inputBoxes = {}
+local linkButtons = {}
 
 local highlightTimer = 0
 local caretVisible = true
@@ -29,16 +30,41 @@ local bestTimesPopupShown = false
 local customPopupShown = false
 local highScorePopupShown = false
 
+local smallFont = love.graphics.newFont(10)
+local medFont = love.graphics.newFont(14)
+local bigFont = love.graphics.newFont(20)
+
 local popupImage
+
+local function within(btnX, btnY, btnW, btnH)
+    local mx, my = love.mouse.getPosition()
+
+    if mx > btnX and mx <= btnX + btnW and my > btnY and my <= btnY + btnH then
+        return true
+    end
+
+    return false
+end
 
 function popup.onMouseReleased(button)
     if button == 1 then
         if popup.shouldShow then
             for _, btn in ipairs(buttons) do
-                if popup.within(btn.x, btn.y, btn.w, btn.h) then
+                if within(btn.x, btn.y, btn.w, btn.h) then
                     if btn.onClick then
                         btn.onClick()
                         break
+                    end
+                end
+            end
+            if aboutPopupShown then
+                for _, link in ipairs(linkButtons) do
+                    if within(link.x, link.y, link.w, link.h) then
+                        if link.onClick then
+                            if link.link then
+                                link.onClick(link.link)
+                            end
+                        end
                     end
                 end
             end
@@ -53,7 +79,7 @@ function popup.onMousePressed(button)
                 box.active = false
             end
             for _, box in ipairs(inputBoxes) do
-                if popup.within(box.x, box.y, box.w, box.h) then
+                if within(box.x, box.y, box.w, box.h) then
                     box.active = true
                     box.firstClick = true
                     break
@@ -147,11 +173,11 @@ function popup.commitCustomInputs()
     for _, box in ipairs(inputBoxes) do
         local num = tonumber(box.text)
         if box.label == "Height:" then
-            height = popup.clamp(num or 9, 9, 99) -- Should be 24
+            height = popup.clamp(num or 9, 9, 99)
         elseif box.label == "Width:" then
-            width = popup.clamp(num or 9, 9, 99)  -- Should be 30
+            width = popup.clamp(num or 9, 9, 99)
         elseif box.label == "Mines:" then
-            mines = num or 10                     -- Should be 667
+            mines = num or 10
         end
     end
 
@@ -163,16 +189,6 @@ function popup.commitCustomInputs()
     config.setConfig("gridMines", mines)
 
     gameplay.startNewGame("custom")
-end
-
-function popup.within(btnX, btnY, btnW, btnH)
-    local mx, my = love.mouse.getPosition()
-
-    if mx > btnX and mx <= btnX + btnW and my > btnY and my <= btnY + btnH then
-        return true
-    end
-
-    return false
 end
 
 function popup.show(state)
@@ -216,6 +232,10 @@ function popup.onClickOK()
     end
 
     popup.hide()
+end
+
+local function clickLink(link)
+    love.system.openURL(link)
 end
 
 function popup.onClickCancel()
@@ -321,6 +341,30 @@ function popup.setup(state)
         },
     }
 
+    local linkH = smallFont:getHeight()
+    local linkColor = { 0, 0, 238 / 255 }
+    local linkHoverColor = { 0, 102 / 255, 1 }
+
+    local sourceLabel = "Source on Github"
+    local sourceLink = "https://github.com/Kurtsley/XP-Minesweeper-Classic"
+    local sourceLinkW = smallFont:getWidth(sourceLabel)
+    local sourceLinkX = (GameWidth / 2) - (sourceLinkW / 2)
+    local sourceLinkY = (GameHeight / 2) - 10
+
+
+    linkButtons = {
+        {
+            label = sourceLabel,
+            link = sourceLink,
+            x = sourceLinkX,
+            y = sourceLinkY,
+            w = sourceLinkW,
+            h = linkH,
+            color = linkColor,
+            hover = linkHoverColor,
+            onClick = clickLink,
+        }
+    }
 
     if state == "HighScore" then
         local newTime = timer:getTime()
@@ -347,16 +391,17 @@ function popup.setup(state)
 
         file_manager.save(difficulty, roundTime)
     elseif state == "About" then
-        local aboutLabel = "By Kurtsley - 2025\n\nMade with Love2d\nhttps://love2d.org/"
-
-        local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 50 }
-        local x, y = labelPos[1], labelPos[2]
+        local aboutLabel = "Copyright (c) 2025 Kurtsley"
+        local aboutW = smallFont:getWidth(aboutLabel)
+        local aboutX = (GameWidth / 2) - (aboutW / 2)
+        local aboutY = (GameHeight / 2) - 48
 
         popup.content = {
             label = aboutLabel,
-            x = x,
-            y = y,
+            x = aboutX,
+            y = aboutY,
             buttons = { buttons[1] },
+            linkButtons = linkButtons,
         }
     elseif state == "Best" then
         local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 54 }
@@ -392,9 +437,6 @@ function popup.draw()
 
     local textColor = { 0, 0, 0 }
     local inputBoxActiveColor = { 1, 1, 1 }
-    local smallFont = love.graphics.newFont(10)
-    local medFont = love.graphics.newFont(14)
-    local bigFont = love.graphics.newFont(20)
 
     love.graphics.draw(popupImage, (GameWidth / 2) - (popupWidth / 2), (GameHeight / 2) - (popupHeight / 2))
     love.graphics.setColor(0, 0, 0)
@@ -417,6 +459,12 @@ function popup.draw()
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
         love.graphics.printf(popup.content.label, popup.content.x, popup.content.y, popupWidth - 40, "center")
+        for _, link in ipairs(popup.content.linkButtons) do
+            local hovered = within(link.x, link.y, link.w, link.h)
+            local color = hovered and link.hover or link.color
+            love.graphics.setColor(color)
+            love.graphics.printf(link.label, link.x, link.y, link.w, "center")
+        end
     elseif bestTimesPopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
@@ -460,7 +508,7 @@ function popup.draw()
     end
 
     for _, btn in ipairs(popup.content.buttons) do
-        local hovered = popup.within(btn.x, btn.y, btn.w, btn.h)
+        local hovered = within(btn.x, btn.y, btn.w, btn.h)
         local color = hovered and btn.hoverColor or btn.normalColor
 
         love.graphics.setColor(color)
