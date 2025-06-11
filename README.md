@@ -3,7 +3,8 @@
 
 A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](https://love2d.org/).
 
-![ms-screenshot-small](https://github.com/user-attachments/assets/8c7ed898-50b4-43fd-807b-4f2c9ad4f8c1)
+![msprogresssmall](https://github.com/user-attachments/assets/a7c56787-74c7-443f-9cd7-7190ddbd88b0)
+
 
 ## Features
 
