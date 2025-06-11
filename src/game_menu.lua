@@ -147,17 +147,24 @@ function game_menu.quit()
     gameState.quit()
 end
 
+function game_menu.updateSubmenuXPos()
+    helpsubX = menuPosX(helpsubX, helpsubW)
+    optionssubX = menuPosX(optionssubX, optionssubW)
+end
+
 function game_menu.load()
+    local MenuWidth = 150
+
     -- Main
     gameX, gameY, gameW = 2, 0, 50
     optionsX, optionsY, optionsW = 50, 0, 54
     helpX, helpY, helpW = 104, 0, 44
     -- Game submenu
-    gamesubX, gamesubY, gamesubW, gamesubH = 0, MenuHeight, 150, (MenuHeight * 8) + 13
+    gamesubX, gamesubY, gamesubW, gamesubH = 2, MenuHeight, MenuWidth, (MenuHeight * 8) + 13
     -- Options submenu
-    optionssubX, optionssubY, optionssubW, optionssubH = 50, MenuHeight, 150, (MenuHeight * 2) + 6
+    optionssubX, optionssubY, optionssubW, optionssubH = 50, MenuHeight, MenuWidth, (MenuHeight * 2) + 6
     -- Help submenu
-    helpsubX, helpsubY, helpsubW, helpsubH = 104, MenuHeight, 150, MenuHeight + 4
+    helpsubX, helpsubY, helpsubW, helpsubH = 104, MenuHeight, MenuWidth, MenuHeight + 4
 
     normalBoxColor = { 1, 1, 1 }
     subItemNormalColor = { 249 / 255, 249 / 255, 249 / 255 }
@@ -212,7 +219,7 @@ function game_menu.load()
     helpSubItems = {
         {
             label = "About",
-            x = menuPosX(helpsubX, helpsubW),
+            x = helpsubX,
             y = helpsubY + 2,
             w = helpsubW,
             h = MenuHeight,
@@ -228,7 +235,7 @@ function game_menu.load()
     optionsSubItems = {
         {
             label = "Marks",
-            x = menuPosX(optionssubX, optionssubW),
+            x = optionssubX,
             y = optionssubY + 2,
             w = optionssubW,
             h = MenuHeight,
@@ -473,6 +480,7 @@ function game_menu.drawSubMenu(menu)
                 end
             end
         end
+        -- Options submenu
     elseif menu == "Options" then
         local xPos = menuPosX(optionssubX, optionssubW)
 
@@ -480,22 +488,22 @@ function game_menu.drawSubMenu(menu)
         love.graphics.rectangle("fill", xPos, optionssubY, optionssubW, optionssubH)
 
         for _, subitem in ipairs(optionsSubItems) do
-            local hovered = withinItem(xPos, subitem.y, subitem.w, subitem.h)
+            subitem.x = xPos
+            local hovered = withinItem(subitem.x, subitem.y, subitem.w, subitem.h)
             local color = hovered and subitem.hoverColor or subitem.normalColor
-
             -- Box
             love.graphics.setColor(color)
-            love.graphics.rectangle("fill", xPos, subitem.y, subitem.w, subitem.h, subitem.cornerRadius,
+            love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h, subitem.cornerRadius,
                 subitem.cornerRadius)
             -- Text
             love.graphics.setFont(font)
             love.graphics.setColor(textColor)
-            love.graphics.printf(subitem.label, xPos + subitem.labelXOffset,
+            love.graphics.printf(subitem.label, subitem.x + subitem.labelXOffset,
                 subitem.y + subitem.labelYOffset, subitem.w, "left")
             -- Check mark
             if subitem.check and subitem.check(subitem) then
-                love.graphics.line(xPos + 15, subitem.y + 12, xPos + 20, subitem.y + 17)
-                love.graphics.line(xPos + 20, subitem.y + 17, xPos + 28, subitem.y + 8)
+                love.graphics.line(subitem.x + 15, subitem.y + 12, subitem.x + 20, subitem.y + 17)
+                love.graphics.line(subitem.x + 20, subitem.y + 17, subitem.x + 28, subitem.y + 8)
             end
         end
     else
@@ -506,16 +514,17 @@ function game_menu.drawSubMenu(menu)
         love.graphics.rectangle("fill", xPos, helpsubY, helpsubW, helpsubH)
 
         for _, subitem in ipairs(helpSubItems) do
-            local hovered = withinItem(xPos, subitem.y, subitem.w, subitem.h)
+            subitem.x = xPos
+            local hovered = withinItem(subitem.x, subitem.y, subitem.w, subitem.h)
             local color = hovered and subitem.hoverColor or subitem.normalColor
             -- Box
             love.graphics.setColor(color)
-            love.graphics.rectangle("fill", xPos, subitem.y, subitem.w, subitem.h, subitem.cornerRadius,
+            love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h, subitem.cornerRadius,
                 subitem.cornerRadius)
             -- Text
             love.graphics.setFont(font)
             love.graphics.setColor(textColor)
-            love.graphics.printf(subitem.label, xPos + subitem.labelXOffset,
+            love.graphics.printf(subitem.label, subitem.x + subitem.labelXOffset,
                 subitem.y + subitem.labelYOffset, subitem.w, "left")
         end
     end
@@ -551,9 +560,6 @@ function game_menu.draw()
         game_menu.drawSubMenu("Help")
     end
     love.graphics.setColor(1, 1, 1)
-end
-
-function game_menu.update()
 end
 
 return game_menu
