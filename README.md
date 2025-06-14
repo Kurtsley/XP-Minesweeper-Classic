@@ -33,7 +33,3 @@ Now available on the [Microsoft Store!](https://apps.microsoft.com/detail/9N926V
 ## About This Project
 
 This project is my way of practicing game development and learning the LÖVE (Love2D) framework. I wanted to recreate the classic Windows XP Minesweeper as a way to build my skills with Lua, graphics handling, and game logic. This is for fun and not a professional product in any way.
-
----
-
-Made by Kurtsley
