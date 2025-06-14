@@ -262,6 +262,7 @@ function board.onMouseReleased(button, heldButtons)
     if button == 1 then
         if mouseX >= Face_x and mouseX <= Face_x + faceButton.size and
             mouseY >= Face_y and mouseY <= Face_y + faceButton.size then
+            InitGame = false
             gameState.changeState(gameState.NEW_GAME)
         end
     end

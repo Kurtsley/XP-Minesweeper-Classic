@@ -26,6 +26,8 @@ function faceButton:setPressed(value)
 end
 
 function faceButton:faceUpdate()
+    local game_menu = require("src.game_menu")
+
     if popup.shouldShow then return end
 
     local mouseX, mouseY = love.mouse.getPosition()
@@ -51,7 +53,7 @@ function faceButton:faceUpdate()
         local rows = config.gridHeight
         local cols = config.gridWidth
 
-        if not (gameState.is(gameState.GAME_OVER) or gameState.is(gameState.VICTORY)) then
+        if not (gameState.is(gameState.GAME_OVER) or gameState.is(gameState.VICTORY) or game_menu.anySubmenuOpen()) then
             if mouseX >= Board_start_x and mouseX <= Board_start_x + cols * tilesets.cell.size and
                 mouseY >= Board_start_y and mouseY <= Board_start_y + rows * tilesets.cell.size then
                 if love.mouse.isDown(1) then

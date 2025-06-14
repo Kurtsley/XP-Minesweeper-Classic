@@ -54,6 +54,7 @@ function gameplay.startNewGame(diff)
 
     GameWidth, GameHeight = love.graphics.getDimensions()
 
+    InitGame = false
     gameState.changeState(gameState.NEW_GAME)
 end
 
@@ -76,10 +77,13 @@ function gameplay.playGame()
 end
 
 function gameplay.gameStart()
-    board.initBoard()
-    gameState.resetMinecount()
-    timer:reset()
-    counter.init()
+    if not InitGame then
+        board.initBoard()
+        gameState.resetMinecount()
+        timer:reset()
+        counter.init()
+        InitGame = true
+    end
 end
 
 function gameplay.victory()

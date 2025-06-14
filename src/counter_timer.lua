@@ -13,6 +13,9 @@ local mineCounter_x3 = 55
 local timer_x1 = 0
 local timer_x2 = 0
 local timer_x3 = 0
+local timer_x1_xOffset = 72
+local timer_x2_xOffset = 56
+local timer_x3_xOffset = 40
 local counterY = 48
 
 local function digitQuadsLookup(digit)
@@ -40,9 +43,9 @@ local function digitQuadsLookup(digit)
 end
 
 function counterTimer.init()
-    timer_x1 = GameWidth - 72
-    timer_x2 = GameWidth - 56
-    timer_x3 = GameWidth - 40
+    timer_x1 = GameWidth - timer_x1_xOffset
+    timer_x2 = GameWidth - timer_x2_xOffset
+    timer_x3 = GameWidth - timer_x3_xOffset
 end
 
 function counterTimer.drawCounter(value, x1, x2, x3, y)

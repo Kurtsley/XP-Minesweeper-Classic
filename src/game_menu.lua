@@ -73,9 +73,20 @@ end
 function game_menu.onMouseReleased(button)
     if popup.shouldShow then return end
 
+    if button ~= 1 then return false end
+
     if button == 1 then
-        if game_menu.gameSubMenuOpen then
-            for _, subitem in ipairs(gameSubItems) do
+        for _, item in ipairs(items) do
+            if withinItem(item.x, item.y, item.w, item.h) then
+                if item.onClick then
+                    item.onClick(item.label)
+                    return true
+                end
+            end
+        end
+
+        local function checkSubMenu(subItems, closeKey)
+            for _, subitem in ipairs(subItems) do
                 if withinItem(subitem.x, subitem.y, subitem.w, subitem.h) then
                     if subitem.onClick then
                         if subitem.key then
@@ -87,54 +98,32 @@ function game_menu.onMouseReleased(button)
                     return true
                 end
             end
+            game_menu.submenuClose(closeKey)
+        end
 
-            game_menu.submenuClose("Game")
-            return "closed"
+        if game_menu.gameSubMenuOpen then
+            if checkSubMenu(gameSubItems, "Game") then return true end
         end
 
         if game_menu.helpSubMenuOpen then
-            for _, subitem in ipairs(helpSubItems) do
-                if withinItem(subitem.x, subitem.y, subitem.w, subitem.h) then
-                    if subitem.onClick then
-                        subitem.onClick()
-                    end
-                    return true
-                end
-            end
-
-            game_menu.submenuClose("Help")
-            return "closed"
+            if checkSubMenu(helpSubItems, "Help") then return true end
         end
 
         if game_menu.optionsSubMenuOpen then
-            for _, subitem in ipairs(optionsSubItems) do
-                if withinItem(subitem.x, subitem.y, subitem.w, subitem.h) then
-                    if subitem.onClick then
-                        subitem.onClick()
-                    end
-                    return true
-                end
-            end
-
-            game_menu.submenuClose("Options")
-            return "closed"
-        end
-
-        for _, item in ipairs(items) do
-            if withinItem(item.x, item.y, item.w, item.h) then
-                if item.onClick then
-                    item.onClick(item.label)
-                    return true
-                end
-            end
+            if checkSubMenu(optionsSubItems, "Options") then return true end
         end
     end
 
     return false
 end
 
+function game_menu.anySubmenuOpen()
+    return game_menu.gameSubMenuOpen or game_menu.optionsSubMenuOpen or game_menu.helpSubMenuOpen
+end
+
 function game_menu.newGame()
     game_menu.gameSubMenuOpen = false
+    InitGame = false
     gameState.changeState(gameState.NEW_GAME)
 end
 

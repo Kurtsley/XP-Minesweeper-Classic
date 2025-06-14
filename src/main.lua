@@ -39,6 +39,7 @@ Board_start_y = 80 + MenuHeight
 GameWidth = 0
 GameHeight = 0
 TileSize = 16
+InitGame = false
 ------------------
 
 function love.keypressed(key)

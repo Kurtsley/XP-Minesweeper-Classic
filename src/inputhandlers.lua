@@ -28,13 +28,10 @@ function inputhandlers.onMousePressed(button, heldButtons)
 end
 
 function inputhandlers.onMouseReleased(button, heldButtons)
+    local submenuOpen = game_menu.anySubmenuOpen()
     local menuHandled = game_menu.onMouseReleased(button)
 
-    if menuHandled == true then
-        return
-    elseif menuHandled == "closed" then
-        return
-    end
+    if menuHandled == true or menuHandled == "closed" or submenuOpen then return end
 
     if popup.shouldShow then
         popup.onMouseReleased(button)
