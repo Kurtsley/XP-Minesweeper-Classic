@@ -90,6 +90,8 @@ function Tile.revealTile(startRow, startCol)
             end
         end
 
+        sound.play("pop")
+
         ::continue::
     end
 end

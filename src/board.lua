@@ -292,7 +292,6 @@ function board.onMouseReleased(button, heldButtons)
                         for _, adTile in ipairs(adjacentTiles) do
                             if not adTile.isFlagged then
                                 Tile.revealTile(adTile.row, adTile.col)
-                                sound.play("pop")
                             end
                         end
                     end
@@ -304,7 +303,6 @@ function board.onMouseReleased(button, heldButtons)
                         gameState.changeState(gameState.PLAYING)
                     end
                     Tile.revealTile(row, col)
-                    sound.play("pop")
                 end
             end
         end
