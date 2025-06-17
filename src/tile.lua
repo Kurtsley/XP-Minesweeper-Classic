@@ -48,7 +48,7 @@ function Tile.revealTile(startRow, startCol)
         local row, col = pos[1], pos[2]
         local tile = board.grid[row][col]
 
-        if not tile.isCovered then
+        if not tile.isCovered or tile.isFlagged then
             goto continue
         end
 
