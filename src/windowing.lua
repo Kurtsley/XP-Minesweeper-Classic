@@ -8,7 +8,7 @@ local windowing = {}
 function windowing.centerWindow()
     local screenWidth, screenHeight = love.window.getDesktopDimensions()
     local centerX = (screenWidth - GameWidth) / 2
-    local centerY = (screenHeight - GameHeight) / 2
+    local centerY = math.max(0, (screenHeight - GameHeight) / 2)
 
     love.window.setPosition(centerX, centerY)
 end
