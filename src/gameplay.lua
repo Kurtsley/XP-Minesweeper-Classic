@@ -82,6 +82,7 @@ function gameplay.gameStart()
         gameState.resetMinecount()
         timer:reset()
         counter.init()
+        file_manager.save_difficulty(gameState.getDifficulty())
         InitGame = true
     end
 end

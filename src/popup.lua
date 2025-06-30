@@ -389,9 +389,9 @@ function popup.setup(state)
             buttons = { buttons[1] },
         }
 
-        file_manager.save(difficulty, roundTime)
+        file_manager.save_times(difficulty, roundTime)
     elseif state == "About" then
-        local aboutLabel = "Copyright (c) 2025 Kurtsley"
+        local aboutLabel = string.format("Version %s\nCopyright (c) 2025 Kurtsley", config.version)
         local aboutW = smallFont:getWidth(aboutLabel)
         local aboutX = (GameWidth / 2) - (aboutW / 2)
         local aboutY = (GameHeight / 2) - 48

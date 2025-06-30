@@ -4,6 +4,7 @@
 -- Handles all gamestates and counts
 
 local config = require("src.config")
+local file_manager = require("src.file_manager")
 
 local gameState = {
     NEW_GAME  = "new_game",
@@ -24,7 +25,7 @@ local startingMines = 10
 local timer = {}
 
 local currentState = gameState.NEW_GAME
-local currentDiff = difficulty.EASY
+local currentDiff = file_manager.load_difficulty()
 local mineCount = startingMines
 
 function timer:update(dt)
