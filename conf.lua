@@ -14,7 +14,7 @@ function love.conf(t)
 
     t.releases = {
         title = "msxp-classic",
-        version = "1.2.0",
+        version = "1.2.1",
         author = "Kurtsley",
         email = "kurtsley@gmail.com",
         description = "Minesweeper with Love",
