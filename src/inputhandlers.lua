@@ -23,7 +23,7 @@ function inputhandlers.onMousePressed(button, heldButtons)
     if popup.shouldShow then
         popup.onMousePressed(button)
     else
-        board.onMousePressed(button)
+        board.onMousePressed(button, heldButtons)
     end
 end
 

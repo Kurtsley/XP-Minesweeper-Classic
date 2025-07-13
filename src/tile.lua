@@ -61,7 +61,7 @@ function Tile.revealTile(startRow, startCol)
             return
         end
 
-        local adjacentMines = board.countAdjacentMines(row, col)
+        local adjacentMines = board.countAdjacentMinesOrFlags(row, col, board.countKeys.mines)
         tile.adjacentMines = adjacentMines
 
         if adjacentMines == 0 then

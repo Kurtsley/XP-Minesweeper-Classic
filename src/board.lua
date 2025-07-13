@@ -18,6 +18,17 @@ function board.initBoard()
     local Tile = require("src.tile")
 
     board.grid = {}
+    board.holdCanceled = false
+    board.mouseWasDown = {
+        [1] = false,
+        [2] = false,
+        [3] = false,
+    }
+
+    board.countKeys = {
+        mines = "isMine",
+        flags = "isFlagged",
+    }
 
     local rows = 0
     local cols = 0
@@ -92,22 +103,22 @@ function board.adjacentMinesLookup(count)
     end
 end
 
-function board.countAdjacentMines(row, col)
-    local mineCount = 0
+function board.countAdjacentMinesOrFlags(row, col, key)
+    local count = 0
 
     local adjacentTiles = board.getAdjacentTiles(row, col)
 
     for _, tile in ipairs(adjacentTiles) do
-        if tile.isMine then
-            mineCount = mineCount + 1
+        if tile[key] then
+            count = count + 1
         end
     end
 
-    return mineCount
+    return count
 end
 
 function board.isInSafeZone(row, col, safeRow, safeCol)
-    return math.abs(row - safeRow) <= 1 and math.abs(col - safeCol) <= 1
+    return row == safeRow and col == safeCol
 end
 
 function board.addMinesExcluding(safeRow, safeCol)
@@ -137,7 +148,7 @@ function board.addMinesExcluding(safeRow, safeCol)
             local y = Board_start_y + (r - 1) * tilesets.cell.size
             local col = math.floor((x - Board_start_x) / tilesets.cell.size) + 1
             local row = math.floor((y - Board_start_y) / tilesets.cell.size) + 1
-            local adjacentMines = board.countAdjacentMines(row, col)
+            local adjacentMines = board.countAdjacentMinesOrFlags(row, col, board.countKeys.mines)
             if adjacentMines > 0 then
                 tile.adjacentMines = adjacentMines
             else
@@ -156,6 +167,16 @@ function board.gridInteraction()
         return
     end
 
+    local mouseNow = {
+        [1] = love.mouse.isDown(1),
+        [2] = love.mouse.isDown(2),
+        [3] = love.mouse.isDown(3),
+    }
+
+    local leftReleasedWhileRightHeld = board.mouseWasDown[1] and not mouseNow[1] and mouseNow[2]
+    local rightReleasedWhileLeftHeld = board.mouseWasDown[2] and not mouseNow[2] and mouseNow[1]
+    local middleReleasedWhileAnyHeld = board.mouseWasDown[3] and not mouseNow[3] and (mouseNow[1] or mouseNow[2])
+
     local mouseX, mouseY = love.mouse.getPosition()
 
     -- Clear all held tiles for multi-hold
@@ -164,6 +185,12 @@ function board.gridInteraction()
             local tile = board.grid[r][c]
             tile.isHeld = false
         end
+    end
+
+    if leftReleasedWhileRightHeld or
+        rightReleasedWhileLeftHeld or
+        middleReleasedWhileAnyHeld then
+        return
     end
 
     for r = 1, #board.grid do
@@ -193,6 +220,10 @@ function board.gridInteraction()
             end
         end
     end
+
+    board.mouseWasDown[1] = mouseNow[1]
+    board.mouseWasDown[2] = mouseNow[2]
+    board.mouseWasDown[3] = mouseNow[3]
 end
 
 function board.checkVictory()
@@ -208,12 +239,17 @@ function board.checkVictory()
     return true
 end
 
-function board.onMousePressed(button)
+function board.onMousePressed(button, heldButtons)
     local game_menu = require("src.game_menu")
     local popup = require("src.popup")
 
     if gameState.is(gameState.GAME_OVER) or gameState.is(gameState.VICTORY) or game_menu.gameSubMenuOpen or popup.shouldShow then
         return
+    end
+
+    if ((button == 2 or button == 3) and heldButtons[1]) or
+        ((button == 1 or button == 3) and heldButtons[2]) then
+        board.holdCanceled = true
     end
 
     local mouseX, mouseY = love.mouse.getPosition()
@@ -226,7 +262,7 @@ function board.onMousePressed(button)
 
         if tile then
             if tile.isCovered then
-                if button == 2 then
+                if button == 2 and not heldButtons[1] then
                     if config.qMarks then
                         if tile.isFlagged then
                             tile.isFlagged = false
@@ -281,12 +317,7 @@ function board.onMouseReleased(button, heldButtons)
         if tile then
             if not tile.isCovered and tile.adjacentMines > 0 then
                 if (button == 1 and heldButtons[2]) or (button == 2 and heldButtons[1]) or button == 3 then
-                    local flaggedTiles = 0
-                    for _, adTile in ipairs(adjacentTiles) do
-                        if adTile.isFlagged then
-                            flaggedTiles = flaggedTiles + 1
-                        end
-                    end
+                    local flaggedTiles = board.countAdjacentMinesOrFlags(row, col, board.countKeys.flags)
 
                     if tile.adjacentMines == flaggedTiles then
                         for _, adTile in ipairs(adjacentTiles) do
@@ -297,7 +328,7 @@ function board.onMouseReleased(button, heldButtons)
                     end
                 end
             elseif tile.isCovered and not tile.isFlagged then
-                if button == 1 and not heldButtons[2] then
+                if button == 1 and not heldButtons[2] and not board.holdCanceled then
                     if gameState.is(gameState.NEW_GAME) then
                         board.addMinesExcluding(row, col)
                         gameState.changeState(gameState.PLAYING)
@@ -306,6 +337,10 @@ function board.onMouseReleased(button, heldButtons)
                 end
             end
         end
+    end
+
+    if not heldButtons[1] and not heldButtons[2] then
+        board.holdCanceled = false
     end
 end
 
