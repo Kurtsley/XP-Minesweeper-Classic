@@ -3,8 +3,7 @@
 
 A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](https://love2d.org/).
 
-![msprogresssmall](https://github.com/user-attachments/assets/a7c56787-74c7-443f-9cd7-7190ddbd88b0)
-
+<img width="514" height="408" alt="ms" src="https://github.com/user-attachments/assets/8f79a3bf-a248-45fe-a105-e223c0fafd16" />
 
 ## Features
 
@@ -22,13 +21,9 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](h
 
 Simply grab the release for you OS from the releases page and run, or download Love2d and run the love file directly. (Confirmed to work on v11.5)
 
-Now available on the [Microsoft Store!](https://apps.microsoft.com/detail/9N926V9NSPZF)
+Now available on the Microsoft Store!
 
-## TODO
-
-- Resizable window scaling
-- Persistent state on start
-- Logic cleanup and code formatting
+[![Microsoft Store!](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9N926V9NSPZF)
 
 ## About This Project
 
