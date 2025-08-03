@@ -4,7 +4,6 @@
 
 function love.conf(t)
     t.window.title = "XP Minesweeper Classic"
-    t.window.icon = "assets/icons/iconsmall.png"
     t.window.width = 176
     t.window.height = 264
     t.window.vsync = true

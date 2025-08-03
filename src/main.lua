@@ -69,6 +69,13 @@ function love.load()
     math.randomseed(os.time())
     GameWidth, GameHeight = love.graphics.getDimensions()
 
+    if love.system.getOS() == "Windows" or love.system.getOS() == "Linux" then
+        local ok, icon = pcall(love.image.newImageData, "assets/icons/iconsmall.png")
+        if ok and icon then
+            love.window.setIcon(icon)
+        end
+    end
+
     sound.load()
     game_menu.load()
     popup.load()
