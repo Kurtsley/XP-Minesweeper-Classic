@@ -188,7 +188,7 @@ function popup.commitCustomInputs()
     config.setConfig("gridWidth", width)
     config.setConfig("gridMines", mines)
 
-    gameplay.startNewGame("custom")
+    gameplay.initGame("custom")
 end
 
 function popup.show(state)

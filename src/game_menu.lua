@@ -11,20 +11,65 @@ local gameState = state.gameState
 
 local game_menu = {}
 
-local gameX, gameY, gameW
-local optionsX, optionsY, optionsW
-local helpX, helpY, helpW
-local gamesubX, gamesubY, gamesubW, gamesubH
-local optionssubX, optionssubY, optionssubW, optionssubH
-local helpsubX, helpsubY, helpsubW, helpsubH
-local normalBoxColor, highlightBoxColor, textColor
-local subItemNormalColor
-local sepColor
-local font
+-- Menu Globals --
+local font = love.graphics.newFont(12)
+local menuWidth = 150
+local menuHeight = 24
+local menuYOffset = 5
+local subMenuXOffset = 40
+local cornerRadius = 8
+local sepX = 7
+local sepW = menuWidth - 5
+local sepH = 5
+local sepXOffset = 5
+local menuOpacity = 0.9
+local normalBoxColor = { 1, 1, 1 }
+local subItemNormalColor = { 249 / 255, 249 / 255, 249 / 255, 0 }
+local subItemBaseColor = { 249 / 255, 249 / 255, 249 / 255, menuOpacity}
+local highlightBoxColor = { 245 / 255, 245 / 255, 245 / 255, menuOpacity }
+local textColor = { 0, 0, 0 }
+local sepColor = { 192 / 255, 192 / 255, 192 / 255, menuOpacity }
+-- End Globals --
+
 local items = {}
 local gameSubItems = {}
 local helpSubItems = {}
 local optionsSubItems = {}
+
+local menuItems = {
+    game = { x = 2, y = 0, w = 50, yOffset = 5 },
+    options = { x = 50, y = 0, w = 54 },
+    help = { x = 104, y = 0, w = 44 },
+}
+
+local subItems = {
+    game = { x = 2, h = 205 },
+    options = { x = 50, h = 54 },
+    help = { x = 104, h = 28 },
+}
+
+local gameYValues = {
+    y1 = 26,
+    y2 = (menuHeight * 2) + 4,
+    y3 = (menuHeight * 2) + 11,
+    y4 = (menuHeight * 3) + 13,
+    y5 = (menuHeight * 4) + 15,
+    y6 = (menuHeight * 5) + 17,
+    y7 = (menuHeight * 6) + 19,
+    y8 = (menuHeight * 7) + 2,
+    y9 = (menuHeight * 8) + 4,
+    y10 = (menuHeight * 8) + 11,
+
+}
+
+local optionsYValues = {
+    y1 = 26,
+    y2 = (menuHeight * 2) + 4,
+}
+
+local helpYValues = {
+    y1 = 26,
+}
 
 game_menu.helpSubMenuOpen = false
 game_menu.gameSubMenuOpen = false
@@ -129,7 +174,7 @@ end
 
 function game_menu.startNewGame(diff)
     game_menu.gameSubMenuOpen = false
-    gameplay.startNewGame(diff)
+    gameplay.initGame(diff)
 end
 
 function game_menu.quit()
@@ -137,40 +182,19 @@ function game_menu.quit()
 end
 
 function game_menu.updateSubmenuXPos()
-    helpsubX = menuPosX(helpsubX, helpsubW)
-    optionssubX = menuPosX(optionssubX, optionssubW)
+    subItems.help.x = menuPosX(subItems.help.x, subItems.help.w)
+    subItems.options.x = menuPosX(subItems.options.x, subItems.options.w)
 end
 
 function game_menu.load()
-    local MenuWidth = 150
-
-    -- Main
-    gameX, gameY, gameW = 2, 0, 50
-    optionsX, optionsY, optionsW = 50, 0, 54
-    helpX, helpY, helpW = 104, 0, 44
-    -- Game submenu
-    gamesubX, gamesubY, gamesubW, gamesubH = 2, MenuHeight, MenuWidth, (MenuHeight * 8) + 13
-    -- Options submenu
-    optionssubX, optionssubY, optionssubW, optionssubH = 50, MenuHeight, MenuWidth, (MenuHeight * 2) + 6
-    -- Help submenu
-    helpsubX, helpsubY, helpsubW, helpsubH = 104, MenuHeight, MenuWidth, MenuHeight + 4
-
-    normalBoxColor = { 1, 1, 1 }
-    subItemNormalColor = { 249 / 255, 249 / 255, 249 / 255 }
-    highlightBoxColor = { 245 / 255, 245 / 255, 245 / 255 }
-    textColor = { 0, 0, 0 }
-    sepColor = { 192 / 255, 192 / 255, 192 / 255 }
-
-    font = love.graphics.newFont(12)
-
     items = {
         {
             label = "Game",
-            x = gameX,
-            y = gameY,
-            w = gameW,
-            h = MenuHeight,
-            labelYOffset = 5,
+            x = menuItems.game.x,
+            y = menuItems.game.y,
+            w = menuItems.game.w,
+            h = menuHeight,
+            labelYOffset = menuYOffset,
             normalColor = normalBoxColor,
             hoverColor = highlightBoxColor,
             onClick = function()
@@ -179,11 +203,11 @@ function game_menu.load()
         },
         {
             label = "Options",
-            x = optionsX,
-            y = optionsY,
-            w = optionsW,
-            h = MenuHeight,
-            labelYOffset = 5,
+            x = menuItems.options.x,
+            y = menuItems.options.y,
+            w = menuItems.options.w,
+            h = menuHeight,
+            labelYOffset = menuYOffset,
             normalColor = normalBoxColor,
             hoverColor = highlightBoxColor,
             onClick = function()
@@ -192,11 +216,11 @@ function game_menu.load()
         },
         {
             label = "Help",
-            x = helpX,
-            y = helpY,
-            w = helpW,
-            h = MenuHeight,
-            labelYOffset = 5,
+            x = menuItems.help.x,
+            y = menuItems.help.y,
+            w = menuItems.help.w,
+            h = menuHeight,
+            labelYOffset = menuYOffset,
             normalColor = normalBoxColor,
             hoverColor = highlightBoxColor,
             onClick = function()
@@ -208,13 +232,13 @@ function game_menu.load()
     helpSubItems = {
         {
             label = "About",
-            x = helpsubX,
-            y = helpsubY + 2,
-            w = helpsubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.help.x,
+            y = helpYValues.y1,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             onClick = game_menu.toggleAboutPopup
@@ -224,13 +248,13 @@ function game_menu.load()
     optionsSubItems = {
         {
             label = "Marks",
-            x = optionssubX,
-            y = optionssubY + 2,
-            w = optionssubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.options.x,
+            y = optionsYValues.y1,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             check = checkMarkCheck,
@@ -238,13 +262,13 @@ function game_menu.load()
         },
         {
             label = "Sound",
-            x = optionssubX,
-            y = (MenuHeight * 2) + 4,
-            w = optionssubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.options.x,
+            y = optionsYValues.y2,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             check = checkMarkCheck,
@@ -255,37 +279,37 @@ function game_menu.load()
     gameSubItems = {
         {
             label = "New",
-            x = gamesubX,
-            y = MenuHeight + 2,
-            w = gamesubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.game.x,
+            y = gameYValues.y1,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             onClick = game_menu.newGame
         },
         {
             -- Sep
-            x = gamesubX + 5,
-            y = (MenuHeight * 2) + 4,
-            w = gamesubW - 5,
-            h = 5,
-            xOffset = 5,
+            x = sepX,
+            y = gameYValues.y2,
+            w = sepW,
+            h = sepH,
+            xOffset = sepXOffset,
             color = sepColor,
             sep = true
         },
         {
             label = "Beginner",
             key = "easy",
-            x = gamesubX,
-            y = (MenuHeight * 2) + 11,
-            w = gamesubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.game.x,
+            y = gameYValues.y3,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             check = checkMarkCheck,
@@ -294,13 +318,13 @@ function game_menu.load()
         {
             label = "Intermediate",
             key = "medium",
-            x = gamesubX,
-            y = (MenuHeight * 3) + 13,
-            w = gamesubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.game.x,
+            y = gameYValues.y4,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             check = checkMarkCheck,
@@ -309,13 +333,13 @@ function game_menu.load()
         {
             label = "Expert",
             key = "hard",
-            x = gamesubX,
-            y = (MenuHeight * 4) + 15,
-            w = gamesubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.game.x,
+            y = gameYValues.y5,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             check = checkMarkCheck,
@@ -324,13 +348,13 @@ function game_menu.load()
         {
             label = "Custom...",
             key = "custom",
-            x = gamesubX,
-            y = (MenuHeight * 5) + 17,
-            w = gamesubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.game.x,
+            y = gameYValues.y6,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             check = checkMarkCheck,
@@ -338,46 +362,46 @@ function game_menu.load()
         },
         {
             -- Sep
-            x = gamesubX + 5,
-            y = (MenuHeight * 6) + 19,
-            w = gamesubW - 5,
-            h = 5,
-            xOffset = 5,
+            x = sepX,
+            y = gameYValues.y7,
+            w = sepW,
+            h = sepH,
+            xOffset = sepXOffset,
             color = sepColor,
             sep = true
         },
         {
             label = "Best Times...",
-            x = gamesubX,
-            y = (MenuHeight * 7) + 2,
-            w = gamesubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.game.x,
+            y = gameYValues.y8,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             onClick = game_menu.openBestTimes
         },
         {
             -- Sep
-            x = gamesubX + 5,
-            y = (MenuHeight * 8) + 4,
-            w = gamesubW - 5,
-            h = 5,
-            xOffset = 5,
+            x = sepX,
+            y = gameYValues.y9,
+            w = sepW,
+            h = sepH,
+            xOffset = sepXOffset,
             color = sepColor,
             sep = true
         },
         {
             label = "Exit",
-            x = gamesubX,
-            y = (MenuHeight * 8) + 11,
-            w = gamesubW,
-            h = MenuHeight,
-            labelXOffset = 40,
-            labelYOffset = 5,
-            cornerRadius = 8,
+            x = subItems.game.x,
+            y = gameYValues.y10,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
             onClick = game_menu.quit
@@ -442,8 +466,8 @@ end
 function game_menu.drawSubMenu(menu)
     if menu == "Game" then
         -- Game submenu
-        love.graphics.setColor(subItemNormalColor)
-        love.graphics.rectangle("fill", gamesubX, gamesubY, gamesubW, gamesubH)
+        love.graphics.setColor(subItemBaseColor)
+        love.graphics.rectangle("fill", subItems.game.x, menuHeight, menuWidth, subItems.game.h, cornerRadius)
 
         for _, subitem in ipairs(gameSubItems) do
             local hovered = withinItem(subitem.x, subitem.y, subitem.w, subitem.h)
@@ -471,10 +495,10 @@ function game_menu.drawSubMenu(menu)
         end
         -- Options submenu
     elseif menu == "Options" then
-        local xPos = menuPosX(optionssubX, optionssubW)
+        local xPos = menuPosX(subItems.options.x, menuWidth)
 
-        love.graphics.setColor(subItemNormalColor)
-        love.graphics.rectangle("fill", xPos, optionssubY, optionssubW, optionssubH)
+        love.graphics.setColor(subItemBaseColor)
+        love.graphics.rectangle("fill", xPos, menuHeight, menuWidth, subItems.options.h)
 
         for _, subitem in ipairs(optionsSubItems) do
             subitem.x = xPos
@@ -497,10 +521,10 @@ function game_menu.drawSubMenu(menu)
         end
     else
         -- Help submenu
-        local xPos = menuPosX(helpsubX, helpsubW)
+        local xPos = menuPosX(subItems.help.x, menuWidth)
 
-        love.graphics.setColor(subItemNormalColor)
-        love.graphics.rectangle("fill", xPos, helpsubY, helpsubW, helpsubH)
+        love.graphics.setColor(subItemBaseColor)
+        love.graphics.rectangle("fill", xPos, subItems.help.h, menuWidth, subItems.help.h)
 
         for _, subitem in ipairs(helpSubItems) do
             subitem.x = xPos

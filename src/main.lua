@@ -59,7 +59,7 @@ function love.textinput(t)
 end
 
 local states = {
-    [gameState.NEW_GAME] = gameplay.gameStart,
+    [gameState.NEW_GAME] = gameplay.newGame,
     [gameState.PLAYING] = gameplay.playGame,
     [gameState.GAME_OVER] = gameplay.gameOver,
     [gameState.VICTORY] = gameplay.victory,
@@ -80,7 +80,7 @@ function love.load()
     game_menu.load()
     popup.load()
     file_manager.init()
-    gameplay.startNewGame(gameState.getDifficulty())
+    gameplay.initGame(gameState.getDifficulty())
     windowing.centerWindow()
 
     input.registerKeyPress(inputHandlers.onKeyPressed)
@@ -92,7 +92,7 @@ end
 function love.update(dt)
     states[gameState.get()]()
     timer:update(dt)
-    faceButton:faceUpdate()
+    faceButton:update()
     board.gridInteraction()
     popup.update(dt)
 end
@@ -102,9 +102,9 @@ function love.draw()
     -- Drawing this color to cover up shifting tiles
     love.graphics.clear(192 / 255, 192 / 255, 192 / 255)
 
-    board.drawBoard()
+    board.draw()
     counterTimer.draw(gameState.getMineCount(), timer:getTime())
-    faceButton:drawFace()
+    faceButton:draw()
     game_menu.draw()
     popup.draw()
 

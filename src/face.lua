@@ -25,7 +25,7 @@ function faceButton:setPressed(value)
     self.pressed = value
 end
 
-function faceButton:faceUpdate()
+function faceButton:update()
     local game_menu = require("src.game_menu")
 
     if popup.shouldShow then return end
@@ -64,7 +64,7 @@ function faceButton:faceUpdate()
     end
 end
 
-function faceButton:drawFace()
+function faceButton:draw()
     if self.pressed then
         love.graphics.draw(tilesets.face.image, tilesets.face.quads.pressed, Face_x, Face_y)
     elseif self.state == "surprise" then

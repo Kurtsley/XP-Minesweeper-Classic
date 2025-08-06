@@ -18,7 +18,7 @@ local difficulty = state.difficulty
 
 local gameplay = {}
 
-function gameplay.startNewGame(diff)
+function gameplay.initGame(diff)
     if diff == "easy" then
         gameState.setDifficulty(difficulty.EASY)
         config.setConfig("gridHeight", EasyRows)
@@ -40,7 +40,7 @@ function gameplay.startNewGame(diff)
         error("Invalid difficulty")
     end
 
-    gameplay.gameStart()
+    gameplay.newGame()
 
     local map_width = (config.gridWidth + 2) * TileSize
     local map_height = (config.gridHeight + 5 + 1) * TileSize + MenuHeight
@@ -76,7 +76,7 @@ function gameplay.playGame()
     end
 end
 
-function gameplay.gameStart()
+function gameplay.newGame()
     if not InitGame then
         board.initBoard()
         gameState.resetMinecount()

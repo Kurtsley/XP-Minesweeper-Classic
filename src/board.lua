@@ -344,7 +344,7 @@ function board.onMouseReleased(button, heldButtons)
     end
 end
 
-function board.drawBoard()
+function board.draw()
     local Tile = require("src.tile")
 
     local rows = 0
