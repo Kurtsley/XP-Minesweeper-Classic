@@ -22,13 +22,11 @@ local sepX = 7
 local sepW = menuWidth - 5
 local sepH = 5
 local sepXOffset = 5
-local menuOpacity = 0.9
 local normalBoxColor = { 1, 1, 1 }
-local subItemNormalColor = { 249 / 255, 249 / 255, 249 / 255, 0 }
-local subItemBaseColor = { 249 / 255, 249 / 255, 249 / 255, menuOpacity}
-local highlightBoxColor = { 245 / 255, 245 / 255, 245 / 255, menuOpacity }
+local subItemNormalColor = { 249 / 255, 249 / 255, 249 / 255 }
+local highlightBoxColor = { 245 / 255, 245 / 255, 245 / 255 }
 local textColor = { 0, 0, 0 }
-local sepColor = { 192 / 255, 192 / 255, 192 / 255, menuOpacity }
+local sepColor = { 192 / 255, 192 / 255, 192 / 255 }
 -- End Globals --
 
 local items = {}
@@ -37,13 +35,13 @@ local helpSubItems = {}
 local optionsSubItems = {}
 
 local menuItems = {
-    game = { x = 2, y = 0, w = 50, yOffset = 5 },
+    game = { x = 0, y = 0, w = 50, yOffset = 5 },
     options = { x = 50, y = 0, w = 54 },
     help = { x = 104, y = 0, w = 44 },
 }
 
 local subItems = {
-    game = { x = 2, h = 205 },
+    game = { x = 0, h = 205 },
     options = { x = 50, h = 54 },
     help = { x = 104, h = 28 },
 }
@@ -466,8 +464,8 @@ end
 function game_menu.drawSubMenu(menu)
     if menu == "Game" then
         -- Game submenu
-        love.graphics.setColor(subItemBaseColor)
-        love.graphics.rectangle("fill", subItems.game.x, menuHeight, menuWidth, subItems.game.h, cornerRadius)
+        love.graphics.setColor(subItemNormalColor)
+        love.graphics.rectangle("fill", subItems.game.x, menuHeight, menuWidth, subItems.game.h)
 
         for _, subitem in ipairs(gameSubItems) do
             local hovered = withinItem(subitem.x, subitem.y, subitem.w, subitem.h)
@@ -479,8 +477,7 @@ function game_menu.drawSubMenu(menu)
             else
                 -- Box
                 love.graphics.setColor(color)
-                love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h, subitem.cornerRadius,
-                    subitem.cornerRadius)
+                love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h)
                 -- Text
                 love.graphics.setFont(font)
                 love.graphics.setColor(textColor)
@@ -497,7 +494,7 @@ function game_menu.drawSubMenu(menu)
     elseif menu == "Options" then
         local xPos = menuPosX(subItems.options.x, menuWidth)
 
-        love.graphics.setColor(subItemBaseColor)
+        love.graphics.setColor(subItemNormalColor)
         love.graphics.rectangle("fill", xPos, menuHeight, menuWidth, subItems.options.h)
 
         for _, subitem in ipairs(optionsSubItems) do
@@ -506,8 +503,7 @@ function game_menu.drawSubMenu(menu)
             local color = hovered and subitem.hoverColor or subitem.normalColor
             -- Box
             love.graphics.setColor(color)
-            love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h, subitem.cornerRadius,
-                subitem.cornerRadius)
+            love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h)
             -- Text
             love.graphics.setFont(font)
             love.graphics.setColor(textColor)
@@ -523,8 +519,8 @@ function game_menu.drawSubMenu(menu)
         -- Help submenu
         local xPos = menuPosX(subItems.help.x, menuWidth)
 
-        love.graphics.setColor(subItemBaseColor)
-        love.graphics.rectangle("fill", xPos, subItems.help.h, menuWidth, subItems.help.h)
+        love.graphics.setColor(subItemNormalColor)
+        love.graphics.rectangle("fill", xPos, menuHeight, menuWidth, subItems.help.h)
 
         for _, subitem in ipairs(helpSubItems) do
             subitem.x = xPos
@@ -532,8 +528,7 @@ function game_menu.drawSubMenu(menu)
             local color = hovered and subitem.hoverColor or subitem.normalColor
             -- Box
             love.graphics.setColor(color)
-            love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h, subitem.cornerRadius,
-                subitem.cornerRadius)
+            love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h)
             -- Text
             love.graphics.setFont(font)
             love.graphics.setColor(textColor)
