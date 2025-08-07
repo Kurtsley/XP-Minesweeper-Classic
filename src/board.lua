@@ -50,7 +50,7 @@ function board.initBoard()
     for r = 1, rows do
         board.grid[r] = {}
         for c = 1, cols do
-            board.grid[r][c] = Tile.createTile(false, 0, r, c)
+            board.grid[r][c] = Tile.new(false, 0, r, c)
         end
     end
 end
@@ -158,7 +158,7 @@ function board.addMinesExcluding(safeRow, safeCol)
     end
 end
 
-function board.gridInteraction()
+function board.update()
     local game_menu = require("src.game_menu")
     local popup = require("src.popup")
 

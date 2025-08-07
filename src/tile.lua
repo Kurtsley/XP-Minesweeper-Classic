@@ -24,7 +24,7 @@ local Tile = {
     adjacentMines = 0,
 }
 
-function Tile.createTile(isMine, adjacentMines, row, col)
+function Tile.new(isMine, adjacentMines, row, col)
     local newTile = {}
 
     for key, value in pairs(Tile) do

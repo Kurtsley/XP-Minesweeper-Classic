@@ -93,7 +93,7 @@ function love.update(dt)
     states[gameState.get()]()
     timer:update(dt)
     faceButton:update()
-    board.gridInteraction()
+    board.update()
     popup.update(dt)
 end
 
@@ -101,7 +101,6 @@ function love.draw()
     love.graphics.push()
     -- Drawing this color to cover up shifting tiles
     love.graphics.clear(192 / 255, 192 / 255, 192 / 255)
-
     board.draw()
     counterTimer.draw(gameState.getMineCount(), timer:getTime())
     faceButton:draw()
