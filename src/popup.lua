@@ -408,7 +408,7 @@ function popup.setup(state)
             linkButtons = linkButtons,
         }
     elseif state == "SaveError" then
-        local saveErrorLabel = "Unable to access save directory\ntimes will be lost on exit!"
+        local saveErrorLabel = "Unable to access save directory\ntimes will not be saved!"
         local saveErrorW = smallFont:getWidth(saveErrorLabel)
         local saveErrorX = (GameWidth / 2) - (saveErrorW / 2)
         local saveErrorY = (GameHeight / 2) - 54

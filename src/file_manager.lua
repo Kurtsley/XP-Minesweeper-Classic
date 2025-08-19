@@ -6,7 +6,9 @@
 local json = require("libs.json")
 local config = require("src.config")
 
-local file_manager = {}
+local file_manager = {
+    systemWritable = false,
+}
 
 local defaultTimes = {
     easy = 999.999,
@@ -20,6 +22,7 @@ local function isSystemWritable()
     love.filesystem.write(testFile, "test")
     if love.filesystem.getInfo(testFile) then
         love.filesystem.remove(testFile)
+        file_manager.systemWritable = true
         return true
     end
 
@@ -44,7 +47,7 @@ end
 
 function file_manager.isHighScore(time, difficulty)
     -- Only track the basic 3 difficulties
-    if difficulty == "custom" then return end
+    if difficulty == "custom" or not file_manager.systemWritable then return end
 
     local times = file_manager.load()
 
@@ -69,18 +72,17 @@ function file_manager.save_times(difficulty, newTime)
     -- Only track the basic 3 difficulties
     if difficulty == "custom" then return end
 
-    local data = file_manager.load() or {}
-
-    data[difficulty] = newTime
+    local data = file_manager.load()
 
     if data then
+        data[difficulty] = newTime
         local encoded = json.encode(data)
         love.filesystem.write("times.json", encoded)
     end
 end
 
 function file_manager.save_difficulty(difficulty)
-    local data = file_manager.load() or {}
+    local data = file_manager.load()
 
     if data then
         data.last_difficulty = difficulty

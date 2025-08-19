@@ -7,6 +7,7 @@ local gameplay = require("src.gameplay")
 local state = require("src.state")
 local config = require("src.config")
 local popup = require("src.popup")
+local file_manager = require("src.file_manager")
 local gameState = state.gameState
 
 local game_menu = {}
@@ -196,7 +197,7 @@ function game_menu.load()
             normalColor = normalBoxColor,
             hoverColor = highlightBoxColor,
             onClick = function()
-                game_menu.toggleSubmenu("Game")
+                game_menu.openSubmenu("Game")
             end
         },
         {
@@ -209,7 +210,7 @@ function game_menu.load()
             normalColor = normalBoxColor,
             hoverColor = highlightBoxColor,
             onClick = function()
-                game_menu.toggleSubmenu("Options")
+                game_menu.openSubmenu("Options")
             end
         },
         {
@@ -222,7 +223,7 @@ function game_menu.load()
             normalColor = normalBoxColor,
             hoverColor = highlightBoxColor,
             onClick = function()
-                game_menu.toggleSubmenu("Help")
+                game_menu.openSubmenu("Help")
             end
         },
     }
@@ -239,7 +240,7 @@ function game_menu.load()
             cornerRadius = cornerRadius,
             normalColor = subItemNormalColor,
             hoverColor = highlightBoxColor,
-            onClick = game_menu.toggleAboutPopup
+            onClick = game_menu.openAboutPopup
         }
     }
 
@@ -407,25 +408,31 @@ function game_menu.load()
     }
 end
 
-function game_menu.toggleAboutPopup()
-    game_menu.toggleSubmenu("Help")
+function game_menu.openAboutPopup()
+    game_menu.openSubmenu("Help")
     popup.setup("About")
     popup.show("About")
 end
 
 function game_menu.openBestTimes()
-    game_menu.submenuClose("Game")
-    popup.setup("Best")
-    popup.show("Best")
+    if file_manager.systemWritable then
+        game_menu.submenuClose("Game")
+        popup.setup("Best")
+        popup.show("Best")
+    else
+        game_menu.submenuClose("Game")
+        popup.setup("SaveError")
+        popup.show("SaveError")
+    end
 end
 
 function game_menu.openCustomPopup()
-    game_menu.toggleSubmenu("Game")
+    game_menu.openSubmenu("Game")
     popup.setup("Custom")
     popup.show("Custom")
 end
 
-function game_menu.toggleSubmenu(menu)
+function game_menu.openSubmenu(menu)
     if menu == "Game" then
         game_menu.gameSubMenuOpen = not game_menu.gameSubMenuOpen
         game_menu.helpSubMenuOpen = false
