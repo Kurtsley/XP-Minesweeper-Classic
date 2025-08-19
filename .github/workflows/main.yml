@@ -46,7 +46,7 @@ jobs:
         mv msxp-classic.love build/msxp-classic.love
 
     - name: Build Linux AppImage
-      uses: love-actions/love-actions-linux@v2
+      uses: Kurtsley/love-actions-linux@fix-appimagetool-url
       with:
         app-name: ${{ env.PRODUCT_NAME }}
         product-name: ${{ env.PRODUCT_NAME }}
