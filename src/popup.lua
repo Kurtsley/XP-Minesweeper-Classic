@@ -29,6 +29,7 @@ local aboutPopupShown = false
 local bestTimesPopupShown = false
 local customPopupShown = false
 local highScorePopupShown = false
+local saveErrorPopupShown = false
 
 local smallFont = love.graphics.newFont(10)
 local medFont = love.graphics.newFont(14)
@@ -196,6 +197,7 @@ function popup.show(state)
     aboutPopupShown = false
     customPopupShown = false
     highScorePopupShown = false
+    saveErrorPopupShown = false
 
     if state == "About" then
         aboutPopupShown = true
@@ -205,6 +207,8 @@ function popup.show(state)
         customPopupShown = true
     elseif state == "HighScore" then
         highScorePopupShown = true
+    elseif state == "SaveError" then
+        saveErrorPopupShown = true
     end
 
     popup.shouldShow = true
@@ -256,7 +260,7 @@ function popup.setup(state)
 
     local OKbtnX, OKbtnY
 
-    if state == "About" or state == "HighScore" then
+    if state == "About" or state == "HighScore" or state == "SaveError" then
         OKbtnX, OKbtnY = OKCentered[1], OKCentered[2]
     else
         OKbtnX, OKbtnY = OKRight[1], OKRight[2]
@@ -403,6 +407,18 @@ function popup.setup(state)
             buttons = { buttons[1] },
             linkButtons = linkButtons,
         }
+    elseif state == "SaveError" then
+        local saveErrorLabel = "Unable to access save directory\ntimes will be lost on exit!"
+        local saveErrorW = smallFont:getWidth(saveErrorLabel)
+        local saveErrorX = (GameWidth / 2) - (saveErrorW / 2)
+        local saveErrorY = (GameHeight / 2) - 54
+
+        popup.content = {
+            label = saveErrorLabel,
+            x = saveErrorX,
+            y = saveErrorY,
+            buttons = { buttons[1] },
+        }
     elseif state == "Best" then
         local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 54 }
         local x, y = labelPos[1], labelPos[2]
@@ -470,6 +486,11 @@ function popup.draw()
         love.graphics.setFont(smallFont)
         love.graphics.printf("Fastest Mine Sweepers", popup.content.x, popup.content.y, popupWidth - 40, "center")
         love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + 22, popupWidth - 40, "center")
+    elseif saveErrorPopupShown then
+        love.graphics.setColor(textColor)
+        love.graphics.setFont(smallFont)
+        love.graphics.printf("Error reading times file", popup.content.x + 3, popup.content.y, popupWidth - 24, "center")
+        love.graphics.printf(popup.content.label, popup.content.x + 3, popup.content.y + 22, popupWidth - 24, "center")
     elseif customPopupShown then
         -- Input boxes
         for _, inputBox in ipairs(popup.content.inputBoxes) do

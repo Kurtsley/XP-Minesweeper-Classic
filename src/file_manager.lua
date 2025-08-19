@@ -14,7 +14,26 @@ local defaultTimes = {
     hard = 999.999
 }
 
+local function isSystemWritable()
+    local testFile = "test.txt"
+
+    love.filesystem.write(testFile, "test")
+    if love.filesystem.getInfo(testFile) then
+        love.filesystem.remove(testFile)
+        return true
+    end
+
+    return false
+end
+
 function file_manager.init()
+    local popup = require("src.popup")
+
+    if not isSystemWritable() then
+        popup.setup("SaveError")
+        popup.show("SaveError")
+    end
+
     if not love.filesystem.getInfo("times.json") then
         local times   = defaultTimes
 
@@ -52,8 +71,9 @@ function file_manager.save_times(difficulty, newTime)
 
     local data = file_manager.load() or {}
 
+    data[difficulty] = newTime
+
     if data then
-        data[difficulty] = newTime
         local encoded = json.encode(data)
         love.filesystem.write("times.json", encoded)
     end
@@ -81,13 +101,13 @@ function file_manager.save_difficulty(difficulty)
 end
 
 function file_manager.load()
-    if love.filesystem.getInfo("times.json") then
-        local contents = love.filesystem.read("times.json")
+    local contents = love.filesystem.read("times.json")
 
-        if contents then
-            local times = json.decode(contents)
-            return times
-        end
+    if contents then
+        local times = json.decode(contents)
+        return times
+    else
+        return defaultTimes
     end
 end
 
