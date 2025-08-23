@@ -16,6 +16,7 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](h
 - [LÖVE2D](https://love2d.org/)
 - Lua
 - Using modified textures from the [MS-Texture repo](https://github.com/Minesweeper-World/MS-Texture)
+- [json.lua](https://github.com/rxi/json.lua)
 
 ## Getting Started
 
