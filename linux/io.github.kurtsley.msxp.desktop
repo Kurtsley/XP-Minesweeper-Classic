@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=XP Minesweeper Classic
+Comment=Classic Windows XP Minsweeper clone
+Categories=Game;LogicGame;
+
+Icon=msxp-classic
+Exec=msxp-classic.love
+Terminal=false
