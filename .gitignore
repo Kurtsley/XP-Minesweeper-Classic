@@ -41,3 +41,4 @@ luac.out
 
 .vscode/settings.json
 .flatpak-builder
+repo/

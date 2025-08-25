@@ -17,7 +17,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/Kurtsley/XP-Minesweeper-Classic.git
-        commit: d4ee8690ea79b0c17ebf8a5ac757f79c6820d7d2
+        commit: 18dc459994772f515e423fdbd24cfe40a8db330d
 
       - type: file
         url: https://github.com/Kurtsley/XP-Minesweeper-Classic/releases/download/v1.2.2/msxp-classic.love
@@ -25,7 +25,7 @@ modules:
 
     build-commands:
       - install -Dm644 msxp-classic.love ${FLATPAK_DEST}/share/msxp-classic.love
-      - install -Dm644 msxp-launcher.sh ${FLATPAK_DEST}/bin/msxp-launcher
+      - install -Dm644 linux/msxp-launcher.sh ${FLATPAK_DEST}/bin/msxp-launcher
       - install -Dm644 linux/${FLATPAK_ID}.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop
       - install -Dm644 linux/${FLATPAK_ID}.metainfo.xml ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml
       - install -Dm644 assets/icons/iconbig.png ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
