@@ -14,5 +14,7 @@
         </p>
     </description>
 
+    <url type="homepage">https://github.com/Kurtsley/XP-Minesweeper-Classic</url>
+
     <launchable type="desktop-id">io.github.kurtsley.msxp.desktop</launchable>
 </component>

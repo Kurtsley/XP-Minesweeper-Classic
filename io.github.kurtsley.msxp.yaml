@@ -4,7 +4,7 @@ runtime-version: "24.08"
 base: org.love2d.love2d
 base-version: "stable"
 sdk: org.freedesktop.Sdk
-command: love
+command: msxp-launcher
 finish-args:
   - --share=ipc
   - --socket=x11
@@ -15,11 +15,17 @@ modules:
   - name: msxp
     buildsystem: simple
     sources:
+      - type: git
+        url: https://github.com/Kurtsley/XP-Minesweeper-Classic.git
+        commit: d4ee8690ea79b0c17ebf8a5ac757f79c6820d7d2
+
       - type: file
         url: https://github.com/Kurtsley/XP-Minesweeper-Classic/releases/download/v1.2.2/msxp-classic.love
         sha256: cb8567bf00745ede7bbcde7271a1e1e299f259ddf50e369a8a51aa86265c1ffd
 
     build-commands:
-      - install -Dm644 msxp-classic.love ${FLATPAK_DEST}/msxp-classic.love
-      - install -Dm644 ./linux/${FLATPAK_ID}.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop
+      - install -Dm644 msxp-classic.love ${FLATPAK_DEST}/share/msxp-classic.love
+      - install -Dm644 msxp-launcher.sh ${FLATPAK_DEST}/bin/msxp-launcher
+      - install -Dm644 linux/${FLATPAK_ID}.desktop ${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop
       - install -Dm644 linux/${FLATPAK_ID}.metainfo.xml ${FLATPAK_DEST}/share/metainfo/${FLATPAK_ID}.metainfo.xml
+      - install -Dm644 assets/icons/iconbig.png ${FLATPAK_DEST}/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
