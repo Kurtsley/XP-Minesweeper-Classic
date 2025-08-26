@@ -22,9 +22,13 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](h
 
 Simply grab the release for you OS from the releases page and run, or download Love2d and run the love file directly. (Confirmed to work on v11.5)
 
-Now available on the Microsoft Store!
+Now available on the Microsoft Store and itch.io!
 
 [![Microsoft Store!](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9N926V9NSPZF)
+
+<a href="https://kurtsley.itch.io/xp-minesweeper-classic">
+  <img src="https://static.itch.io/images/badge.svg" alt="Download on itch.io" width="150"/>
+</a>
 
 ## About This Project
 
