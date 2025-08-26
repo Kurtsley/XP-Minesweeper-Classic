@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Name=XP Minesweeper Classic
-Comment=Classic Windows XP Minesweeper clone
-Categories=Game;LogicGame;
-Icon=io.github.kurtsley.msxp
-Exec=/app/bin/msxp-launcher
-Terminal=false
