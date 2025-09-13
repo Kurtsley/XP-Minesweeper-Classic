@@ -13,7 +13,8 @@ local gameState = state.gameState
 local game_menu = {}
 
 -- Menu Globals --
-local font = love.graphics.newFont(12)
+--local font = love.graphics.newFont(12)
+local font = love.graphics.newFont("assets/fonts/NotoSansSC-Regular.ttf", 12)
 local menuWidth = 150
 local menuHeight = 24
 local menuYOffset = 5
@@ -89,9 +90,9 @@ local function checkMarkCheck(subitem)
         return subitem.key == gameState.getDifficulty()
     end
 
-    if subitem.label == "Marks" then
+    if subitem.label == "标记(?)(M)" then
         return config.qMarks
-    elseif subitem.label == "Sound" then
+    elseif subitem.label == "声音(S)" then
         return config.sound
     end
 end
@@ -188,7 +189,7 @@ end
 function game_menu.load()
     items = {
         {
-            label = "Game",
+            label = "游戏(G)",
             x = menuItems.game.x,
             y = menuItems.game.y,
             w = menuItems.game.w,
@@ -201,7 +202,7 @@ function game_menu.load()
             end
         },
         {
-            label = "Options",
+            label = "选项(O)",
             x = menuItems.options.x,
             y = menuItems.options.y,
             w = menuItems.options.w,
@@ -214,7 +215,7 @@ function game_menu.load()
             end
         },
         {
-            label = "Help",
+            label = "帮助(H)",
             x = menuItems.help.x,
             y = menuItems.help.y,
             w = menuItems.help.w,
@@ -230,7 +231,7 @@ function game_menu.load()
 
     helpSubItems = {
         {
-            label = "About",
+            label = "关于(A)",
             x = subItems.help.x,
             y = helpYValues.y1,
             w = menuWidth,
@@ -246,7 +247,7 @@ function game_menu.load()
 
     optionsSubItems = {
         {
-            label = "Marks",
+            label = "标记(?)(M)",
             x = subItems.options.x,
             y = optionsYValues.y1,
             w = menuWidth,
@@ -260,7 +261,7 @@ function game_menu.load()
             onClick = toggleQMarks
         },
         {
-            label = "Sound",
+            label = "声音(S)",
             x = subItems.options.x,
             y = optionsYValues.y2,
             w = menuWidth,
@@ -277,7 +278,7 @@ function game_menu.load()
 
     gameSubItems = {
         {
-            label = "New",
+            label = "开局(N)",
             x = subItems.game.x,
             y = gameYValues.y1,
             w = menuWidth,
@@ -300,7 +301,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "Beginner",
+            label = "初级(B)",
             key = "easy",
             x = subItems.game.x,
             y = gameYValues.y3,
@@ -315,7 +316,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "Intermediate",
+            label = "中级(I)",
             key = "medium",
             x = subItems.game.x,
             y = gameYValues.y4,
@@ -330,7 +331,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "Expert",
+            label = "高级(E)",
             key = "hard",
             x = subItems.game.x,
             y = gameYValues.y5,
@@ -345,7 +346,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "Custom...",
+            label = "自定义(C)...",
             key = "custom",
             x = subItems.game.x,
             y = gameYValues.y6,
@@ -370,7 +371,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "Best Times...",
+            label = "扫雷英雄榜(T)...",
             x = subItems.game.x,
             y = gameYValues.y8,
             w = menuWidth,
@@ -393,7 +394,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "Exit",
+            label = "退出(X)",
             x = subItems.game.x,
             y = gameYValues.y10,
             w = menuWidth,

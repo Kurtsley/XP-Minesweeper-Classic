@@ -31,9 +31,9 @@ local customPopupShown = false
 local highScorePopupShown = false
 local saveErrorPopupShown = false
 
-local smallFont = love.graphics.newFont(10)
-local medFont = love.graphics.newFont(14)
-local bigFont = love.graphics.newFont(20)
+local smallFont = love.graphics.newFont("assets/fonts/NotoSansSC-Regular.ttf", 10)
+local medFont = love.graphics.newFont("assets/fonts/NotoSansSC-Regular.ttf", 14)
+local bigFont = love.graphics.newFont("assets/fonts/NotoSansSC-Regular.ttf", 20)
 
 local popupImage
 
@@ -173,11 +173,11 @@ function popup.commitCustomInputs()
 
     for _, box in ipairs(inputBoxes) do
         local num = tonumber(box.text)
-        if box.label == "Height:" then
+        if box.label == "高度(H):" then
             height = popup.clamp(num or 9, 9, 99)
-        elseif box.label == "Width:" then
+        elseif box.label == "宽度(W):" then
             width = popup.clamp(num or 9, 9, 99)
-        elseif box.label == "Mines:" then
+        elseif box.label == "雷数(M):" then
             mines = num or 10
         end
     end
@@ -271,7 +271,7 @@ function popup.setup(state)
 
     buttons = {
         {
-            label = "OK",
+            label = "确定",
             x = OKbtnX,
             y = OKbtnY,
             w = 60,
@@ -282,7 +282,7 @@ function popup.setup(state)
             onClick = popup.onClickOK
         },
         {
-            label = "Reset",
+            label = "重新计分(R)",
             x = resetBtnX,
             y = resetBtnY,
             w = 60,
@@ -293,7 +293,7 @@ function popup.setup(state)
             onClick = popup.onClickReset
         },
         {
-            label = "Cancel",
+            label = "取消",
             x = cancelBtnX,
             y = cancelBtnY,
             w = 60,
@@ -305,13 +305,13 @@ function popup.setup(state)
         }
     }
 
-    local inputX = (GameWidth / 2) - 18
+    local inputX = (GameWidth / 2) + 10
     local inputY = (GameHeight / 2) - 61
     local inputYOffset = 26
 
     inputBoxes = {
         {
-            label = "Height:",
+            label = "高度(H):",
             text = tostring(config.gridHeight),
             active = false,
             firstClick = false,
@@ -322,7 +322,7 @@ function popup.setup(state)
             h = 22,
         },
         {
-            label = "Width:",
+            label = "宽度(W):",
             text = tostring(config.gridWidth),
             active = false,
             firstClick = false,
@@ -333,7 +333,7 @@ function popup.setup(state)
             h = 22,
         },
         {
-            label = "Mines:",
+            label = "雷数(M):",
             text = tostring(config.gridMines),
             active = false,
             firstClick = false,
@@ -375,12 +375,12 @@ function popup.setup(state)
         local roundTime = tonumber(string.format("%.3f", newTime))
 
         local diffCalc = {
-            easy = "Beginner",
-            medium = "Intermediate",
-            hard = "Expert",
+            easy = "初级",
+            medium = "中级",
+            hard = "高级",
         }
 
-        local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 50 }
+        local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 56 }
 
         local label = diffCalc[difficulty] or "None"
         local x, y = labelPos[1], labelPos[2]
@@ -408,9 +408,9 @@ function popup.setup(state)
             linkButtons = linkButtons,
         }
     elseif state == "SaveError" then
-        local saveErrorLabel = "Unable to access save directory\ntimes will not be saved!"
+        local saveErrorLabel = "无法访问存档目录\n记录将不会被保存！"
         local saveErrorW = smallFont:getWidth(saveErrorLabel)
-        local saveErrorX = (GameWidth / 2) - (saveErrorW / 2)
+        local saveErrorX = (GameWidth / 2) - saveErrorW + 13
         local saveErrorY = (GameHeight / 2) - 54
 
         popup.content = {
@@ -425,8 +425,11 @@ function popup.setup(state)
 
         local times = file_manager.load()
 
-        local bestTimesLabel = string.format("%-13s %7.3f\n%-13s %7.3f\n%-13s %7.3f", "Easy: ", times.easy,
-            "Intermediate: ", times.medium, "Expert: ", times.hard
+        local bestTimesLabel = string.format(
+            "%-6s %7.3f 秒\n%-6s %7.3f 秒\n%-6s %7.3f 秒",
+            "初级:", times.easy,
+            "中级:", times.medium,
+            "高级:", times.hard
         )
 
         popup.content = {
@@ -461,14 +464,14 @@ function popup.draw()
 
     if highScorePopupShown then
         love.graphics.setColor(textColor)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf(string.format("You have the fastest time for %s level.", popup.content.label), popup
+        love.graphics.setFont(bigFont)
+        love.graphics.printf(string.format("已破%s记录", popup.content.label), popup
             .content
             .x, popup.content.y,
             popupWidth - 40,
             "center")
         love.graphics.setFont(bigFont)
-        love.graphics.printf(string.format("%.3f", popup.content.time), popup.content.x, popup.content.y + 32,
+        love.graphics.printf(string.format("%.3f 秒", popup.content.time), popup.content.x, popup.content.y + 32,
             popupWidth - 40,
             "center")
     elseif aboutPopupShown then
@@ -483,20 +486,21 @@ function popup.draw()
         end
     elseif bestTimesPopupShown then
         love.graphics.setColor(textColor)
+        love.graphics.setFont(medFont)
+        love.graphics.printf("扫雷英雄榜", popup.content.x, popup.content.y - 4, popupWidth - 40, "center")
         love.graphics.setFont(smallFont)
-        love.graphics.printf("Fastest Mine Sweepers", popup.content.x, popup.content.y, popupWidth - 40, "center")
-        love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + 22, popupWidth - 40, "center")
+        love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + 18, popupWidth - 40, "center")
     elseif saveErrorPopupShown then
         love.graphics.setColor(textColor)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf("Error reading times file", popup.content.x + 3, popup.content.y, popupWidth - 24, "center")
-        love.graphics.printf(popup.content.label, popup.content.x + 3, popup.content.y + 22, popupWidth - 24, "center")
+        love.graphics.setFont(medFont)
+        love.graphics.printf("读取记录文件时出错", popup.content.x, popup.content.y, popupWidth - 24, "center")
+        love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + 20, popupWidth - 24, "center")
     elseif customPopupShown then
         -- Input boxes
         for _, inputBox in ipairs(popup.content.inputBoxes) do
             love.graphics.setColor(textColor)
-            love.graphics.setFont(smallFont)
-            love.graphics.printf(inputBox.label, inputBox.x - 40, inputBox.y + 4, popupWidth - 40, "left")
+            love.graphics.setFont(medFont)
+            love.graphics.printf(inputBox.label, inputBox.x - 60, inputBox.y - 1, popupWidth - 40, "left")
             if inputBox.active then
                 love.graphics.setColor(inputBoxActiveColor)
             else
@@ -512,10 +516,10 @@ function popup.draw()
             if inputBox.active and inputBox.firstClick and highlightBoxVisible then
                 local textWidth = medFont:getWidth(inputBox.text)
                 local textX = inputBox.x + (inputBox.w - textWidth) / 2
-                love.graphics.rectangle("fill", textX, inputBox.y + 3, textWidth, medFont:getHeight())
+                love.graphics.rectangle("fill", textX, inputBox.y + 1, textWidth, medFont:getHeight())
                 love.graphics.setColor(1, 1, 1)
             end
-            love.graphics.printf(inputBox.text, inputBox.x, inputBox.y + 3, inputBox.w, "center")
+            love.graphics.printf(inputBox.text, inputBox.x, inputBox.y, inputBox.w, "center")
             -- Text caret
             if inputBox.active and not inputBox.firstClick and caretVisible then
                 local textWidth = medFont:getWidth(inputBox.text)
@@ -531,13 +535,15 @@ function popup.draw()
     for _, btn in ipairs(popup.content.buttons) do
         local hovered = within(btn.x, btn.y, btn.w, btn.h)
         local color = hovered and btn.hoverColor or btn.normalColor
+        local font = btn.label == "重新计分(R)" and smallFont or medFont
+        local offset = btn.label == "重新计分(R)" and 4 or 2
 
         love.graphics.setColor(color)
         love.graphics.rectangle("fill", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
         love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle("line", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf(btn.label, btn.x, btn.y + 6, btn.w, "center")
+        love.graphics.setFont(font)
+        love.graphics.printf(btn.label, btn.x, btn.y + offset, btn.w, "center")
     end
 
     love.graphics.setColor(1, 1, 1)
