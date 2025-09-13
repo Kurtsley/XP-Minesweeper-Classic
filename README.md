@@ -18,6 +18,12 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](h
 - Using modified textures from the [MS-Texture repo](https://github.com/Minesweeper-World/MS-Texture)
 - [json.lua](https://github.com/rxi/json.lua)
 
+## Fonts
+
+- This project uses NotoSansSC-Regular.ttf for Chinese text.
+- The font is licensed under the SIL Open Font License (OFL) 1.1)
+- The full license text is included in fonts/LICENSE-OFL.txt.
+
 ## Getting Started
 
 Simply grab the release for you OS from the releases page and run, or download Love2d and run the love file directly. (Confirmed to work on v11.5)
