@@ -9,7 +9,7 @@ local config = {
     gridHeight = 0,
     gridWidth = 0,
     gridMines = 0,
-    version = "1.2.2",
+    version = "1.3.0",
 }
 
 function config.setConfig(option, value)
