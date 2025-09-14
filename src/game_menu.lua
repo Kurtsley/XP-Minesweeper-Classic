@@ -29,6 +29,8 @@ local subItemNormalColor = { 249 / 255, 249 / 255, 249 / 255 }
 local highlightBoxColor = { 245 / 255, 245 / 255, 245 / 255 }
 local textColor = { 0, 0, 0 }
 local sepColor = { 192 / 255, 192 / 255, 192 / 255 }
+local cheatColorMine = { 0, 0, 0 }
+local cheatColorSafe = { 1, 1, 1 }
 -- End Globals --
 
 local items = {}
@@ -632,6 +634,13 @@ function game_menu.draw()
     -- Menu sep line
     love.graphics.setColor(highlightBoxColor)
     love.graphics.line(0, MenuHeight + 1, GameWidth, MenuHeight + 1)
+
+    -- Cheat pixel
+    if gameState.isCheating() then
+        local cheatColor = CheatMineHover and cheatColorMine or cheatColorSafe
+        love.graphics.setColor(cheatColor)
+        love.graphics.rectangle("fill", 0, menuHeight, 1, 1)
+    end
 
     for _, item in ipairs(items) do
         local hovered = withinItem(item.x, item.y, item.w, item.h) and not popup.shouldShow

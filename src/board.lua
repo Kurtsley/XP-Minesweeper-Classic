@@ -205,6 +205,14 @@ function board.update()
 
             if mouseX > tileX and mouseX <= tileX + tileWidth and
                 mouseY > tileY and mouseY <= tileY + tileHeight then
+                    
+                -- Cheat pixel
+                if tile.isMine then
+                    CheatMineHover = true
+                else
+                    CheatMineHover = false
+                end
+
                 if (love.mouse.isDown(1) and love.mouse.isDown(2)) or love.mouse.isDown(3) then
                     for _, tile in ipairs(adjacentTiles) do
                         if not tile.isFlagged then

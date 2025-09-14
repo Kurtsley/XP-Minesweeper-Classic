@@ -40,6 +40,7 @@ GameWidth = 0
 GameHeight = 0
 TileSize = 16
 InitGame = false
+CheatMineHover = false
 ------------------
 
 function love.keypressed(key)

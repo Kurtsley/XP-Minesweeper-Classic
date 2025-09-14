@@ -30,6 +30,13 @@ local mineCount = startingMines
 
 local altPressed = false
 
+-- Cheat
+local cheatWaiting = false
+local enterWaiting = false
+local cheatEnabled = false
+local cheatCode = "xyzzy"
+local cheatBuffer = ""
+
 function timer:update(dt)
     if gameState.is(gameState.PLAYING) then
         self.timer = self.timer + dt
@@ -109,7 +116,28 @@ function gameState.resetAlt()
     altPressed = false
 end
 
+function gameState.isCheating()
+    return cheatEnabled
+end
+
 function gameState.onKeyPressed(key)
+    cheatBuffer = cheatBuffer .. key
+
+    if #cheatBuffer > #cheatCode then
+        cheatBuffer = cheatBuffer:sub(- #cheatCode)
+    end
+
+    if cheatBuffer == cheatCode then
+        cheatWaiting = true
+    end
+
+    if cheatWaiting then
+        if (love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift")) and (key == "return" or key == "kpenter") then
+            cheatEnabled = not cheatEnabled
+            cheatWaiting = false
+        end
+    end
+
     if key == "escape" then
         gameState.quit()
     elseif key == "f2" then
