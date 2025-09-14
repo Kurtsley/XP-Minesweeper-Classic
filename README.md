@@ -11,6 +11,27 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](h
 - Chording support (left+right click to clear around numbers)
 - Supports up to 99x99 grids with 999 mines
 
+## Hotkeys
+### Global / Menu Navigation
+- Alt - Activates hotkey mode, hotkey letters are underlined
+- Alt-G - Opens game menu
+- Alt-O - Opens options menu
+- Alt-H - Opens help menu
+- F2 - Starts a new game
+### Game Menu
+- Alt-N - New game
+- ALt-B - Beginner difficulty
+- Alt-I - Intermediate difficulty
+- Alt-E - Expert difficulty
+- Alt-C - Custom board
+- Alt-T - Show best times
+- Alt-X - Exit game
+### Options Menu
+- Alt-M - Toggle question marks
+- Alt-S - Toggle sound
+### Help Menu
+- Alt-A - Show about popup
+
 ## Tech Stack
 
 - [LÖVE2D](https://love2d.org/)
