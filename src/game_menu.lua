@@ -92,7 +92,7 @@ local function checkMarkCheck(subitem)
         return subitem.key == gameState.getDifficulty()
     end
 
-    if subitem.label == "&Marks" then
+    if subitem.label == "&Marks (?)" then
         return config.qMarks
     elseif subitem.label == "&Sound" then
         return config.sound
@@ -305,7 +305,7 @@ function game_menu.load()
 
     optionsSubItems = {
         {
-            label = "&Marks",
+            label = "&Marks (?)",
             x = subItems.options.x,
             y = optionsYValues.y1,
             w = menuWidth,
