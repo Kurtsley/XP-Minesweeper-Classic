@@ -28,6 +28,8 @@ local currentState = gameState.NEW_GAME
 local currentDiff = file_manager.load_difficulty()
 local mineCount = startingMines
 
+local altPressed = false
+
 function timer:update(dt)
     if gameState.is(gameState.PLAYING) then
         self.timer = self.timer + dt
@@ -90,9 +92,30 @@ function gameState.quit()
     love.event.quit()
 end
 
+function gameState.newGame()
+    InitGame = false
+    gameState.changeState(gameState.NEW_GAME)
+end
+
+function gameState.isAltPressed()
+    return altPressed
+end
+
+function gameState.toggleAlt()
+    altPressed = not altPressed
+end
+
+function gameState.resetAlt()
+    altPressed = false
+end
+
 function gameState.onKeyPressed(key)
     if key == "escape" then
         gameState.quit()
+    elseif key == "f2" then
+        gameState.newGame()
+    elseif key == "lalt" or key == "ralt" then
+        gameState.toggleAlt()
     end
 end
 

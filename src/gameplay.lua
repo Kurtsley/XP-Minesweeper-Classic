@@ -54,8 +54,7 @@ function gameplay.initGame(diff)
 
     GameWidth, GameHeight = love.graphics.getDimensions()
 
-    InitGame = false
-    gameState.changeState(gameState.NEW_GAME)
+    gameState.newGame()
 end
 
 function gameplay.playGame()

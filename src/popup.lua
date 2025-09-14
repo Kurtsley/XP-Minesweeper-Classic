@@ -6,6 +6,7 @@
 local file_manager = require("src.file_manager")
 local config = require("src.config")
 local state = require("src.state")
+local strings = require("src.strings")
 local gameState = state.gameState
 local timer = state.timer
 
@@ -91,6 +92,11 @@ function popup.onMousePressed(button)
 end
 
 function popup.onKeyPressed(key)
+    if bestTimesPopupShown then
+        if key == "r" then
+            popup.onClickReset()
+        end
+    end
     if popup.inputActive() then
         for _, box in ipairs(inputBoxes) do
             if box.active then
@@ -282,7 +288,7 @@ function popup.setup(state)
             onClick = popup.onClickOK
         },
         {
-            label = "Reset",
+            label = "&Reset",
             x = resetBtnX,
             y = resetBtnY,
             w = 60,
@@ -537,7 +543,11 @@ function popup.draw()
         love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle("line", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
         love.graphics.setFont(smallFont)
-        love.graphics.printf(btn.label, btn.x, btn.y + 6, btn.w, "center")
+        love.graphics.printf(strings.displayStr(btn.label), btn.x, btn.y + 6, btn.w, "center")
+
+        if strings.hasHotkey(btn.label) then
+            strings.drawUnderline(btn.label, btn.x - 8, btn.y + 6, btn.w, smallFont, false, true)
+        end
     end
 
     love.graphics.setColor(1, 1, 1)

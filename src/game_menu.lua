@@ -7,6 +7,7 @@ local gameplay = require("src.gameplay")
 local state = require("src.state")
 local config = require("src.config")
 local popup = require("src.popup")
+local strings = require("src.strings")
 local file_manager = require("src.file_manager")
 local gameState = state.gameState
 
@@ -37,8 +38,8 @@ local optionsSubItems = {}
 
 local menuItems = {
     game = { x = 0, y = 0, w = 50, yOffset = 5 },
-    options = { x = 50, y = 0, w = 54 },
-    help = { x = 104, y = 0, w = 44 },
+    options = { x = 50, y = 0, w = 64 },
+    help = { x = 114, y = 0, w = 44 },
 }
 
 local subItems = {
@@ -89,9 +90,9 @@ local function checkMarkCheck(subitem)
         return subitem.key == gameState.getDifficulty()
     end
 
-    if subitem.label == "Marks" then
+    if subitem.label == "&Marks" then
         return config.qMarks
-    elseif subitem.label == "Sound" then
+    elseif subitem.label == "&Sound" then
         return config.sound
     end
 end
@@ -111,6 +112,56 @@ local function menuPosX(xPos, width)
         return GameWidth - width
     else
         return xPos
+    end
+end
+
+function game_menu.onKeyPressed(key)
+    local alt = gameState.isAltPressed()
+    local menuOpen = game_menu.anySubmenuOpen()
+
+    if alt then
+        if menuOpen then
+            if key == "n" then
+                game_menu.newGame()
+                gameState.resetAlt()
+            elseif key == "b" then
+                game_menu.startNewGame("easy")
+                gameState.resetAlt()
+            elseif key == "i" then
+                game_menu.startNewGame("medium")
+                gameState.resetAlt()
+            elseif key == "e" then
+                game_menu.startNewGame("hard")
+                gameState.resetAlt()
+            elseif key == "m" then
+                toggleQMarks()
+                gameState.resetAlt()
+            elseif key == "s" then
+                toggleSound()
+                gameState.resetAlt()
+            elseif key == "t" then
+                game_menu.openBestTimes()
+                gameState.resetAlt()
+            elseif key == "c" then
+                game_menu.openCustomPopup()
+                gameState.resetAlt()
+            elseif key == "a" then
+                game_menu.openAboutPopup()
+                gameState.resetAlt()
+            elseif key == "x" then
+                game_menu.quit()
+            end
+        else
+            if key == "g" then
+                game_menu.openSubmenu("Game")
+            elseif key == "o" then
+                game_menu.openSubmenu("Options")
+            elseif key == "h" then
+                game_menu.openSubmenu("Help")
+            else
+                --gameState.resetAlt()
+            end
+        end
     end
 end
 
@@ -165,10 +216,15 @@ function game_menu.anySubmenuOpen()
     return game_menu.gameSubMenuOpen or game_menu.optionsSubMenuOpen or game_menu.helpSubMenuOpen
 end
 
+function game_menu.closeAllSubmenus()
+    game_menu.submenuClose("Game")
+    game_menu.submenuClose("Options")
+    game_menu.submenuClose("Help")
+end
+
 function game_menu.newGame()
     game_menu.gameSubMenuOpen = false
-    InitGame = false
-    gameState.changeState(gameState.NEW_GAME)
+    gameState.newGame()
 end
 
 function game_menu.startNewGame(diff)
@@ -188,7 +244,8 @@ end
 function game_menu.load()
     items = {
         {
-            label = "Game",
+            --label = strings.displayStr("&Game"),
+            label = "&Game",
             x = menuItems.game.x,
             y = menuItems.game.y,
             w = menuItems.game.w,
@@ -201,7 +258,7 @@ function game_menu.load()
             end
         },
         {
-            label = "Options",
+            label = "&Options",
             x = menuItems.options.x,
             y = menuItems.options.y,
             w = menuItems.options.w,
@@ -214,7 +271,7 @@ function game_menu.load()
             end
         },
         {
-            label = "Help",
+            label = "&Help",
             x = menuItems.help.x,
             y = menuItems.help.y,
             w = menuItems.help.w,
@@ -230,7 +287,7 @@ function game_menu.load()
 
     helpSubItems = {
         {
-            label = "About",
+            label = "&About",
             x = subItems.help.x,
             y = helpYValues.y1,
             w = menuWidth,
@@ -246,7 +303,7 @@ function game_menu.load()
 
     optionsSubItems = {
         {
-            label = "Marks",
+            label = "&Marks",
             x = subItems.options.x,
             y = optionsYValues.y1,
             w = menuWidth,
@@ -260,7 +317,7 @@ function game_menu.load()
             onClick = toggleQMarks
         },
         {
-            label = "Sound",
+            label = "&Sound",
             x = subItems.options.x,
             y = optionsYValues.y2,
             w = menuWidth,
@@ -277,7 +334,7 @@ function game_menu.load()
 
     gameSubItems = {
         {
-            label = "New",
+            label = "&New",
             x = subItems.game.x,
             y = gameYValues.y1,
             w = menuWidth,
@@ -300,7 +357,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "Beginner",
+            label = "&Beginner",
             key = "easy",
             x = subItems.game.x,
             y = gameYValues.y3,
@@ -315,7 +372,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "Intermediate",
+            label = "&Intermediate",
             key = "medium",
             x = subItems.game.x,
             y = gameYValues.y4,
@@ -330,7 +387,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "Expert",
+            label = "&Expert",
             key = "hard",
             x = subItems.game.x,
             y = gameYValues.y5,
@@ -345,7 +402,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "Custom...",
+            label = "&Custom...",
             key = "custom",
             x = subItems.game.x,
             y = gameYValues.y6,
@@ -370,7 +427,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "Best Times...",
+            label = "Best &Times...",
             x = subItems.game.x,
             y = gameYValues.y8,
             w = menuWidth,
@@ -393,7 +450,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "Exit",
+            label = "E&xit",
             x = subItems.game.x,
             y = gameYValues.y10,
             w = menuWidth,
@@ -488,8 +545,18 @@ function game_menu.drawSubMenu(menu)
                 -- Text
                 love.graphics.setFont(font)
                 love.graphics.setColor(textColor)
-                love.graphics.printf(subitem.label, subitem.x + subitem.labelXOffset,
+                if subitem.label == "&New" then
+                    love.graphics.printf("F2", subitem.x - 20, subitem.y + subitem.labelYOffset, subitem.w,
+                        "right")
+                end
+                love.graphics.printf(strings.displayStr(subitem.label), subitem.x + subitem.labelXOffset,
                     subitem.y + subitem.labelYOffset, subitem.w, "left")
+                -- Hotkey underline
+                if strings.hasHotkey(subitem.label) then
+                    strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset,
+                        subitem.y + subitem.labelYOffset,
+                        subitem.w, font, true)
+                end
                 -- Check mark
                 if subitem.check and subitem.check(subitem) then
                     love.graphics.line(subitem.x + 15, subitem.y + 12, subitem.x + 20, subitem.y + 17)
@@ -514,15 +581,20 @@ function game_menu.drawSubMenu(menu)
             -- Text
             love.graphics.setFont(font)
             love.graphics.setColor(textColor)
-            love.graphics.printf(subitem.label, subitem.x + subitem.labelXOffset,
+            love.graphics.printf(strings.displayStr(subitem.label), subitem.x + subitem.labelXOffset,
                 subitem.y + subitem.labelYOffset, subitem.w, "left")
+            -- Hotkey underline
+            if strings.hasHotkey(subitem.label) then
+                strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset, subitem.y + subitem.labelYOffset,
+                    subitem.w, font, true)
+            end
             -- Check mark
             if subitem.check and subitem.check(subitem) then
                 love.graphics.line(subitem.x + 15, subitem.y + 12, subitem.x + 20, subitem.y + 17)
                 love.graphics.line(subitem.x + 20, subitem.y + 17, subitem.x + 28, subitem.y + 8)
             end
         end
-    else
+    elseif menu == "Help" then
         -- Help submenu
         local xPos = menuPosX(subItems.help.x, menuWidth)
 
@@ -539,9 +611,16 @@ function game_menu.drawSubMenu(menu)
             -- Text
             love.graphics.setFont(font)
             love.graphics.setColor(textColor)
-            love.graphics.printf(subitem.label, subitem.x + subitem.labelXOffset,
+            love.graphics.printf(strings.displayStr(subitem.label), subitem.x + subitem.labelXOffset,
                 subitem.y + subitem.labelYOffset, subitem.w, "left")
+            -- Hotkey underline
+            if strings.hasHotkey(subitem.label) then
+                strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset, subitem.y + subitem.labelYOffset,
+                    subitem.w, font, true)
+            end
         end
+    else
+        print("Unkown menu type")
     end
 end
 
@@ -560,10 +639,14 @@ function game_menu.draw()
         -- Box
         love.graphics.setColor(color)
         love.graphics.rectangle("fill", item.x, item.y, item.w, item.h)
-        --Text
+        -- Text
         love.graphics.setFont(font)
         love.graphics.setColor(textColor)
-        love.graphics.printf(item.label, item.x, item.y + item.labelYOffset, item.w, "center")
+        love.graphics.printf(strings.displayStr(item.label), item.x, item.y + item.labelYOffset, item.w, "center")
+        -- Underline
+        if strings.hasHotkey(item.label) then
+            strings.drawUnderline(item.label, item.x, item.y + item.labelYOffset, item.w, font)
+        end
     end
     if game_menu.gameSubMenuOpen then
         game_menu.drawSubMenu("Game")

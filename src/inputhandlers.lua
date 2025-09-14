@@ -12,6 +12,14 @@ local popup = require("src.popup")
 local inputhandlers = {}
 
 function inputhandlers.onKeyPressed(key)
+    local submenuOpen = game_menu.anySubmenuOpen()
+
+    game_menu.onKeyPressed(key)
+
+    if submenuOpen and gameState.isAltPressed() then
+        game_menu.closeAllSubmenus()
+    end
+
     if popup.shouldShow then
         popup.onKeyPressed(key)
     else

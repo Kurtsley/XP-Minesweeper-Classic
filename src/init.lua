@@ -22,6 +22,7 @@ function M.loadAllModules()
     require("src.level_builder")
     require("src.sound")
     require("src.windowing")
+    require("src.strings")
 end
 
 return M
