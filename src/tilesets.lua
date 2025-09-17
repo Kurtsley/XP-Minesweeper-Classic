@@ -10,7 +10,7 @@ local counterBorderTileSize = 16
 
 local cellImage = love.graphics.newImage("assets/tilesets/WinmineXP.png")
 local counterImage = love.graphics.newImage("assets/tilesets/countersmall.png")
-local faceImage = love.graphics.newImage("assets/tilesets/facesfixed.png")
+local faceImage = love.graphics.newImage("assets/tilesets/facesfixednew.png")
 local counterBorderImage = love.graphics.newImage("assets/tilesets/newbordercounter.png")
 local borderImage = love.graphics.newImage("assets/tilesets/bordernew.png")
 

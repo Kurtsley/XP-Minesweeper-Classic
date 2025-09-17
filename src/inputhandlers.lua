@@ -14,17 +14,19 @@ local inputhandlers = {}
 function inputhandlers.onKeyPressed(key)
     local submenuOpen = game_menu.anySubmenuOpen()
 
-    game_menu.onKeyPressed(key)
+    if popup.shouldShow then
+        popup.onKeyPressed(key)
+        return
+    else
+        game_menu.onKeyPressed(key)
+    end
 
     if submenuOpen and gameState.isAltPressed() then
         game_menu.closeAllSubmenus()
+        return
     end
 
-    if popup.shouldShow then
-        popup.onKeyPressed(key)
-    else
-        gameState.onKeyPressed(key)
-    end
+    gameState.onKeyPressed(key)
 end
 
 function inputhandlers.onMousePressed(button, heldButtons)

@@ -21,8 +21,8 @@ function strings.displayStr(str)
     end
 end
 
-function strings.drawUnderline(str, x, y, w, font, sub, but)
-    local alt = gameState.isAltPressed()
+function strings.drawUnderline(str, x, y, w, font, sub, but, localAlt)
+    local alt = (localAlt ~= nil) and localAlt or gameState.isAltPressed()
 
     if alt or but then
         for i = 1, #str do

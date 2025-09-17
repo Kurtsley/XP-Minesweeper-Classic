@@ -7,11 +7,13 @@ local file_manager = require("src.file_manager")
 local config = require("src.config")
 local state = require("src.state")
 local strings = require("src.strings")
+local lang = require("src.languages")
 local gameState = state.gameState
 local timer = state.timer
 
 local popupWidth = 176
 local popupHeight = 160
+local current_lang = "en"
 
 local popup = {
     shouldShow = false,
@@ -37,6 +39,7 @@ local medFont = love.graphics.newFont(14)
 local bigFont = love.graphics.newFont(20)
 
 local popupImage
+local alt
 
 local function within(btnX, btnY, btnW, btnH)
     local mx, my = love.mouse.getPosition()
@@ -46,6 +49,12 @@ local function within(btnX, btnY, btnW, btnH)
     end
 
     return false
+end
+
+local function clearInputBoxes()
+    for _, box in pairs(inputBoxes) do
+        box.active = false
+    end
 end
 
 function popup.onMouseReleased(button)
@@ -77,10 +86,8 @@ end
 function popup.onMousePressed(button)
     if button == 1 then
         if customPopupShown then
-            for _, box in ipairs(inputBoxes) do
-                box.active = false
-            end
-            for _, box in ipairs(inputBoxes) do
+            clearInputBoxes()
+            for _, box in pairs(inputBoxes) do
                 if within(box.x, box.y, box.w, box.h) then
                     box.active = true
                     box.firstClick = true
@@ -97,8 +104,28 @@ function popup.onKeyPressed(key)
             popup.onClickReset()
         end
     end
+    if customPopupShown then
+        if key == "lalt" or key == "ralt" then
+            alt = not alt
+        end
+        if alt then
+            if key == "h" then
+                clearInputBoxes()
+                inputBoxes.height.active = true
+                inputBoxes.height.firstClick = true
+            elseif key == "w" then
+                clearInputBoxes()
+                inputBoxes.width.active = true
+                inputBoxes.width.firstClick = true
+            elseif key == "m" then
+                clearInputBoxes()
+                inputBoxes.mines.active = true
+                inputBoxes.mines.firstClick = true
+            end
+        end
+    end
     if popup.inputActive() then
-        for _, box in ipairs(inputBoxes) do
+        for _, box in pairs(inputBoxes) do
             if box.active then
                 if key == "backspace" then
                     box.text = box.text:sub(1, -2)
@@ -106,7 +133,7 @@ function popup.onKeyPressed(key)
             end
         end
         if key == "return" or key == "escape" or key == "kpenter" then
-            for _, box in ipairs(inputBoxes) do
+            for _, box in pairs(inputBoxes) do
                 box.active = false
             end
         end
@@ -134,7 +161,7 @@ function popup.onKeyPressed(key)
 end
 
 function popup.textinput(t)
-    for _, box in ipairs(inputBoxes) do
+    for _, box in pairs(inputBoxes) do
         if box.active and t:match("%d") then
             if box.firstClick then
                 box.text = t
@@ -166,7 +193,7 @@ function popup.clamp(value, min, max)
 end
 
 function popup.inputActive()
-    for _, box in ipairs(inputBoxes) do
+    for _, box in pairs(inputBoxes) do
         if box.active then return true end
     end
 
@@ -177,13 +204,13 @@ function popup.commitCustomInputs()
     local gameplay = require("src.gameplay")
     local width, height, mines
 
-    for _, box in ipairs(inputBoxes) do
+    for _, box in pairs(inputBoxes) do
         local num = tonumber(box.text)
-        if box.label == "Height:" then
+        if box.label == lang[current_lang].custom_labels.height then
             height = popup.clamp(num or 9, 9, 99)
-        elseif box.label == "Width:" then
+        elseif box.label == lang[current_lang].custom_labels.width then
             width = popup.clamp(num or 9, 9, 99)
-        elseif box.label == "Mines:" then
+        elseif box.label == lang[current_lang].custom_labels.mines then
             mines = num or 10
         end
     end
@@ -253,6 +280,7 @@ function popup.onClickCancel()
 end
 
 function popup.setup(state)
+    alt = false
     state = state or nil
 
     local difficulty = gameState.getDifficulty()
@@ -277,7 +305,7 @@ function popup.setup(state)
 
     buttons = {
         {
-            label = "OK",
+            label = lang[current_lang].buttons.ok,
             x = OKbtnX,
             y = OKbtnY,
             w = 60,
@@ -288,7 +316,7 @@ function popup.setup(state)
             onClick = popup.onClickOK
         },
         {
-            label = "&Reset",
+            label = lang[current_lang].buttons.reset,
             x = resetBtnX,
             y = resetBtnY,
             w = 60,
@@ -299,7 +327,7 @@ function popup.setup(state)
             onClick = popup.onClickReset
         },
         {
-            label = "Cancel",
+            label = lang[current_lang].buttons.cancel,
             x = cancelBtnX,
             y = cancelBtnY,
             w = 60,
@@ -316,8 +344,8 @@ function popup.setup(state)
     local inputYOffset = 26
 
     inputBoxes = {
-        {
-            label = "Height:",
+        height = {
+            label = lang[current_lang].custom_labels.height,
             text = tostring(config.gridHeight),
             active = false,
             firstClick = false,
@@ -327,8 +355,8 @@ function popup.setup(state)
             w = 40,
             h = 22,
         },
-        {
-            label = "Width:",
+        width = {
+            label = lang[current_lang].custom_labels.width,
             text = tostring(config.gridWidth),
             active = false,
             firstClick = false,
@@ -338,8 +366,8 @@ function popup.setup(state)
             w = 40,
             h = 22,
         },
-        {
-            label = "Mines:",
+        mines = {
+            label = lang[current_lang].custom_labels.mines,
             text = tostring(config.gridMines),
             active = false,
             firstClick = false,
@@ -381,9 +409,9 @@ function popup.setup(state)
         local roundTime = tonumber(string.format("%.3f", newTime))
 
         local diffCalc = {
-            easy = "Beginner",
-            medium = "Intermediate",
-            hard = "Expert",
+            easy = lang[current_lang].game_menu.beginner,
+            medium = lang[current_lang].game_menu.intermediate,
+            hard = lang[current_lang].game_menu.expert,
         }
 
         local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 50 }
@@ -414,7 +442,7 @@ function popup.setup(state)
             linkButtons = linkButtons,
         }
     elseif state == "SaveError" then
-        local saveErrorLabel = "Unable to access save directory\ntimes will not be saved!"
+        local saveErrorLabel = lang[current_lang].dialogs.save_error_body
         local saveErrorW = smallFont:getWidth(saveErrorLabel)
         local saveErrorX = (GameWidth / 2) - (saveErrorW / 2)
         local saveErrorY = (GameHeight / 2) - 54
@@ -431,8 +459,10 @@ function popup.setup(state)
 
         local times = file_manager.load()
 
-        local bestTimesLabel = string.format("%-13s %7.3f\n%-13s %7.3f\n%-13s %7.3f", "Easy: ", times.easy,
-            "Intermediate: ", times.medium, "Expert: ", times.hard
+        local bestTimesLabel = string.format("%-13s %7.3f\n%-13s %7.3f\n%-13s %7.3f",
+            lang[current_lang].best_times_labels.easy, times.easy,
+            lang[current_lang].best_times_labels.intermediate, times.medium, lang[current_lang].best_times_labels.expert,
+            times.hard
         )
 
         popup.content = {
@@ -468,7 +498,7 @@ function popup.draw()
     if highScorePopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
-        love.graphics.printf(string.format("You have the fastest time for %s level.", popup.content.label), popup
+        love.graphics.printf(string.format(lang[current_lang].dialogs.high_score, popup.content.label), popup
             .content
             .x, popup.content.y,
             popupWidth - 40,
@@ -490,19 +520,26 @@ function popup.draw()
     elseif bestTimesPopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
-        love.graphics.printf("Fastest Mine Sweepers", popup.content.x, popup.content.y, popupWidth - 40, "center")
+        love.graphics.printf(lang[current_lang].dialogs.best_times_title, popup.content.x, popup.content.y,
+            popupWidth - 40, "center")
         love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + 22, popupWidth - 40, "center")
     elseif saveErrorPopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
-        love.graphics.printf("Error reading times file", popup.content.x + 3, popup.content.y, popupWidth - 24, "center")
+        love.graphics.printf(lang[current_lang].dialogs.save_error_title, popup.content.x + 3, popup.content.y,
+            popupWidth - 24, "center")
         love.graphics.printf(popup.content.label, popup.content.x + 3, popup.content.y + 22, popupWidth - 24, "center")
     elseif customPopupShown then
         -- Input boxes
-        for _, inputBox in ipairs(popup.content.inputBoxes) do
+        for _, inputBox in pairs(popup.content.inputBoxes) do
             love.graphics.setColor(textColor)
             love.graphics.setFont(smallFont)
-            love.graphics.printf(inputBox.label, inputBox.x - 40, inputBox.y + 4, popupWidth - 40, "left")
+            love.graphics.printf(strings.displayStr(inputBox.label), inputBox.x - 40, inputBox.y + 4, popupWidth - 40,
+                "left")
+            -- Underline
+            if strings.hasHotkey(inputBox.label) then
+                strings.drawUnderline(inputBox.label, inputBox.x - 40, inputBox.y + 4, inputBox.w, smallFont, true, false, alt)
+            end
             if inputBox.active then
                 love.graphics.setColor(inputBoxActiveColor)
             else

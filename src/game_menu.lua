@@ -9,6 +9,7 @@ local config = require("src.config")
 local popup = require("src.popup")
 local strings = require("src.strings")
 local file_manager = require("src.file_manager")
+local lang = require("src.languages")
 local gameState = state.gameState
 
 local game_menu = {}
@@ -244,10 +245,11 @@ function game_menu.updateSubmenuXPos()
 end
 
 function game_menu.load()
+    local current_lang = "en"
+
     items = {
         {
-            --label = strings.displayStr("&Game"),
-            label = "&Game",
+            label = lang[current_lang].menu_titles.game,
             x = menuItems.game.x,
             y = menuItems.game.y,
             w = menuItems.game.w,
@@ -260,7 +262,7 @@ function game_menu.load()
             end
         },
         {
-            label = "&Options",
+            label = lang[current_lang].menu_titles.options,
             x = menuItems.options.x,
             y = menuItems.options.y,
             w = menuItems.options.w,
@@ -273,7 +275,7 @@ function game_menu.load()
             end
         },
         {
-            label = "&Help",
+            label = lang[current_lang].menu_titles.help,
             x = menuItems.help.x,
             y = menuItems.help.y,
             w = menuItems.help.w,
@@ -289,7 +291,7 @@ function game_menu.load()
 
     helpSubItems = {
         {
-            label = "&About",
+            label = lang[current_lang].help_menu.about,
             x = subItems.help.x,
             y = helpYValues.y1,
             w = menuWidth,
@@ -305,7 +307,7 @@ function game_menu.load()
 
     optionsSubItems = {
         {
-            label = "&Marks (?)",
+            label = lang[current_lang].options_menu.marks,
             x = subItems.options.x,
             y = optionsYValues.y1,
             w = menuWidth,
@@ -319,7 +321,7 @@ function game_menu.load()
             onClick = toggleQMarks
         },
         {
-            label = "&Sound",
+            label = lang[current_lang].options_menu.sound,
             x = subItems.options.x,
             y = optionsYValues.y2,
             w = menuWidth,
@@ -336,7 +338,7 @@ function game_menu.load()
 
     gameSubItems = {
         {
-            label = "&New",
+            label = lang[current_lang].game_menu.new,
             x = subItems.game.x,
             y = gameYValues.y1,
             w = menuWidth,
@@ -359,7 +361,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "&Beginner",
+            label = lang[current_lang].game_menu.beginner,
             key = "easy",
             x = subItems.game.x,
             y = gameYValues.y3,
@@ -374,7 +376,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "&Intermediate",
+            label = lang[current_lang].game_menu.intermediate,
             key = "medium",
             x = subItems.game.x,
             y = gameYValues.y4,
@@ -389,7 +391,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "&Expert",
+            label = lang[current_lang].game_menu.expert,
             key = "hard",
             x = subItems.game.x,
             y = gameYValues.y5,
@@ -404,7 +406,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = "&Custom...",
+            label = lang[current_lang].game_menu.custom,
             key = "custom",
             x = subItems.game.x,
             y = gameYValues.y6,
@@ -429,7 +431,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "Best &Times...",
+            label = lang[current_lang].game_menu.best_times,
             x = subItems.game.x,
             y = gameYValues.y8,
             w = menuWidth,
@@ -452,7 +454,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = "E&xit",
+            label = lang[current_lang].game_menu.exit,
             x = subItems.game.x,
             y = gameYValues.y10,
             w = menuWidth,
