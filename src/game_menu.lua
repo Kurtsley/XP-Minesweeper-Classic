@@ -15,7 +15,7 @@ local gameState = state.gameState
 local game_menu = {}
 
 -- Menu Globals --
-local font = love.graphics.newFont(12)
+local font = love.graphics.newFont("assets/fonts/font-min-zh.ttf", 12)
 local menuWidth = 150
 local menuHeight = 24
 local menuYOffset = 5
@@ -245,7 +245,7 @@ function game_menu.updateSubmenuXPos()
 end
 
 function game_menu.load()
-    local current_lang = "en"
+    local current_lang = "zh"
 
     items = {
         {

@@ -13,7 +13,7 @@ local timer = state.timer
 
 local popupWidth = 176
 local popupHeight = 160
-local current_lang = "en"
+local current_lang = "zh"
 
 local popup = {
     shouldShow = false,
@@ -34,9 +34,9 @@ local customPopupShown = false
 local highScorePopupShown = false
 local saveErrorPopupShown = false
 
-local smallFont = love.graphics.newFont(10)
-local medFont = love.graphics.newFont(14)
-local bigFont = love.graphics.newFont(20)
+local smallFont = love.graphics.newFont("assets/fonts/font-min-zh.ttf", 10)
+local medFont = love.graphics.newFont("assets/fonts/font-min-zh.ttf", 14)
+local bigFont = love.graphics.newFont("assets/fonts/font-min-zh.ttf", 20)
 
 local popupImage
 local alt
@@ -339,7 +339,7 @@ function popup.setup(state)
         }
     }
 
-    local inputX = (GameWidth / 2) - 18
+    local inputX = (GameWidth / 2) + 10
     local inputY = (GameHeight / 2) - 61
     local inputYOffset = 26
 
@@ -414,7 +414,7 @@ function popup.setup(state)
             hard = lang[current_lang].game_menu.expert,
         }
 
-        local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 50 }
+        local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 56 }
 
         local label = diffCalc[difficulty] or "None"
         local x, y = labelPos[1], labelPos[2]
@@ -444,7 +444,7 @@ function popup.setup(state)
     elseif state == "SaveError" then
         local saveErrorLabel = lang[current_lang].dialogs.save_error_body
         local saveErrorW = smallFont:getWidth(saveErrorLabel)
-        local saveErrorX = (GameWidth / 2) - (saveErrorW / 2)
+        local saveErrorX = (GameWidth / 2) - saveErrorW + 13
         local saveErrorY = (GameHeight / 2) - 54
 
         popup.content = {
