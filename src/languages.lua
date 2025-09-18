@@ -40,6 +40,11 @@ local lang = {
             reset = "&Reset",
             cancel = "Cancel",
         },
+        high_score_labels = {
+            easy = "Easy",
+            medium = "Intermediate",
+            hard = "Expert",
+        },
         dialogs = {
             save_error_title = "Error reading times file",
             save_error_body = "Unable to access save directory\ntimes will not be saved!",
@@ -83,6 +88,11 @@ local lang = {
             ok = "确定",
             reset = "重新计分(&R)",
             cancel = "取消",
+        },
+        high_score_labels = {
+            easy = "初级",
+            medium = "中级",
+            hard = "高级",
         },
         dialogs = {
             save_error_title = "读取记录文件时出错",

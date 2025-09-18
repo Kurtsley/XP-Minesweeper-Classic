@@ -39,10 +39,12 @@ local gameSubItems = {}
 local helpSubItems = {}
 local optionsSubItems = {}
 
+local current_lang = "zh"
+
 local menuItems = {
     game = { x = 0, y = 0, w = 50, yOffset = 5 },
-    options = { x = 50, y = 0, w = 64 },
-    help = { x = 114, y = 0, w = 44 },
+    options = { x = 50, y = 0, w = 50 },
+    help = { x = 100, y = 0, w = 50 },
 }
 
 local subItems = {
@@ -93,9 +95,9 @@ local function checkMarkCheck(subitem)
         return subitem.key == gameState.getDifficulty()
     end
 
-    if subitem.label == "&Marks (?)" then
+    if subitem.label == lang[current_lang].options_menu.marks then
         return config.qMarks
-    elseif subitem.label == "&Sound" then
+    elseif subitem.label == lang[current_lang].options_menu.sound then
         return config.sound
     end
 end
@@ -245,8 +247,6 @@ function game_menu.updateSubmenuXPos()
 end
 
 function game_menu.load()
-    local current_lang = "zh"
-
     items = {
         {
             label = lang[current_lang].menu_titles.game,
@@ -549,7 +549,7 @@ function game_menu.drawSubMenu(menu)
                 -- Text
                 love.graphics.setFont(font)
                 love.graphics.setColor(textColor)
-                if subitem.label == "&New" then
+                if subitem.label == lang[current_lang].game_menu.new then
                     love.graphics.printf("F2", subitem.x - 20, subitem.y + subitem.labelYOffset, subitem.w,
                         "right")
                 end
@@ -656,7 +656,7 @@ function game_menu.draw()
         love.graphics.printf(strings.displayStr(item.label), item.x, item.y + item.labelYOffset, item.w, "center")
         -- Underline
         if strings.hasHotkey(item.label) then
-            strings.drawUnderline(item.label, item.x, item.y + item.labelYOffset, item.w, font)
+            strings.drawUnderline(item.label, item.x + 4, item.y + item.labelYOffset, item.w, font)
         end
     end
     if game_menu.gameSubMenuOpen then

@@ -22,7 +22,7 @@ function strings.displayStr(str)
 end
 
 function strings.drawUnderline(str, x, y, w, font, sub, but, localAlt)
-    local alt = (localAlt ~= nil) and localAlt or gameState.isAltPressed()
+    local alt = (localAlt == nil) and gameState.isAltPressed() or localAlt
 
     if alt or but then
         for i = 1, #str do
@@ -35,8 +35,8 @@ function strings.drawUnderline(str, x, y, w, font, sub, but, localAlt)
 
                 local charWidth = font:getWidth(str:sub(hotkeyCharIndex, hotkeyCharIndex))
 
-                love.graphics.line(textX + offsetX, y + font:getHeight(), textX + offsetX + charWidth,
-                    y + font:getHeight())
+                love.graphics.line(textX + offsetX, y + font:getHeight() - 1, textX + offsetX + charWidth,
+                    y + font:getHeight() - 1)
             end
         end
     end
