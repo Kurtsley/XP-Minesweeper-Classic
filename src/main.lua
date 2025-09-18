@@ -41,6 +41,7 @@ GameHeight = 0
 TileSize = 16
 InitGame = false
 CheatMineHover = false
+Current_lang = "en"
 ------------------
 
 function love.keypressed(key)

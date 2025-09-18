@@ -13,7 +13,6 @@ local timer = state.timer
 
 local popupWidth = 176
 local popupHeight = 160
-local current_lang = "en"
 
 local popup = {
     shouldShow = false,
@@ -206,11 +205,11 @@ function popup.commitCustomInputs()
 
     for _, box in pairs(inputBoxes) do
         local num = tonumber(box.text)
-        if box.label == lang[current_lang].custom_labels.height then
+        if box.label == lang[Current_lang].custom_labels.height then
             height = popup.clamp(num or 9, 9, 99)
-        elseif box.label == lang[current_lang].custom_labels.width then
+        elseif box.label == lang[Current_lang].custom_labels.width then
             width = popup.clamp(num or 9, 9, 99)
-        elseif box.label == lang[current_lang].custom_labels.mines then
+        elseif box.label == lang[Current_lang].custom_labels.mines then
             mines = num or 10
         end
     end
@@ -305,7 +304,7 @@ function popup.setup(state)
 
     buttons = {
         {
-            label = lang[current_lang].buttons.ok,
+            label = lang[Current_lang].buttons.ok,
             x = OKbtnX,
             y = OKbtnY,
             w = 60,
@@ -316,7 +315,7 @@ function popup.setup(state)
             onClick = popup.onClickOK
         },
         {
-            label = lang[current_lang].buttons.reset,
+            label = lang[Current_lang].buttons.reset,
             x = resetBtnX,
             y = resetBtnY,
             w = 60,
@@ -327,7 +326,7 @@ function popup.setup(state)
             onClick = popup.onClickReset
         },
         {
-            label = lang[current_lang].buttons.cancel,
+            label = lang[Current_lang].buttons.cancel,
             x = cancelBtnX,
             y = cancelBtnY,
             w = 60,
@@ -345,7 +344,7 @@ function popup.setup(state)
 
     inputBoxes = {
         height = {
-            label = lang[current_lang].custom_labels.height,
+            label = lang[Current_lang].custom_labels.height,
             text = tostring(config.gridHeight),
             active = false,
             firstClick = false,
@@ -356,7 +355,7 @@ function popup.setup(state)
             h = 22,
         },
         width = {
-            label = lang[current_lang].custom_labels.width,
+            label = lang[Current_lang].custom_labels.width,
             text = tostring(config.gridWidth),
             active = false,
             firstClick = false,
@@ -367,7 +366,7 @@ function popup.setup(state)
             h = 22,
         },
         mines = {
-            label = lang[current_lang].custom_labels.mines,
+            label = lang[Current_lang].custom_labels.mines,
             text = tostring(config.gridMines),
             active = false,
             firstClick = false,
@@ -409,9 +408,9 @@ function popup.setup(state)
         local roundTime = tonumber(string.format("%.3f", newTime))
 
         local diffCalc = {
-            easy = lang[current_lang].game_menu.beginner,
-            medium = lang[current_lang].game_menu.intermediate,
-            hard = lang[current_lang].game_menu.expert,
+            easy = lang[Current_lang].high_score_labels.easy,
+            medium = lang[Current_lang].high_score_labels.medium,
+            hard = lang[Current_lang].high_score_labels.hard,
         }
 
         local labelPos = { (GameWidth / 2) - 70, (GameHeight / 2) - 50 }
@@ -442,7 +441,7 @@ function popup.setup(state)
             linkButtons = linkButtons,
         }
     elseif state == "SaveError" then
-        local saveErrorLabel = lang[current_lang].dialogs.save_error_body
+        local saveErrorLabel = lang[Current_lang].dialogs.save_error_body
         local saveErrorW = smallFont:getWidth(saveErrorLabel)
         local saveErrorX = (GameWidth / 2) - (saveErrorW / 2)
         local saveErrorY = (GameHeight / 2) - 54
@@ -460,8 +459,8 @@ function popup.setup(state)
         local times = file_manager.load()
 
         local bestTimesLabel = string.format("%-13s %7.3f\n%-13s %7.3f\n%-13s %7.3f",
-            lang[current_lang].best_times_labels.easy, times.easy,
-            lang[current_lang].best_times_labels.intermediate, times.medium, lang[current_lang].best_times_labels.expert,
+            lang[Current_lang].best_times_labels.easy, times.easy,
+            lang[Current_lang].best_times_labels.intermediate, times.medium, lang[Current_lang].best_times_labels.expert,
             times.hard
         )
 
@@ -498,7 +497,7 @@ function popup.draw()
     if highScorePopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
-        love.graphics.printf(string.format(lang[current_lang].dialogs.high_score, popup.content.label), popup
+        love.graphics.printf(string.format(lang[Current_lang].dialogs.high_score, popup.content.label), popup
             .content
             .x, popup.content.y,
             popupWidth - 40,
@@ -520,13 +519,13 @@ function popup.draw()
     elseif bestTimesPopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
-        love.graphics.printf(lang[current_lang].dialogs.best_times_title, popup.content.x, popup.content.y,
+        love.graphics.printf(lang[Current_lang].dialogs.best_times_title, popup.content.x, popup.content.y,
             popupWidth - 40, "center")
         love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + 22, popupWidth - 40, "center")
     elseif saveErrorPopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(smallFont)
-        love.graphics.printf(lang[current_lang].dialogs.save_error_title, popup.content.x + 3, popup.content.y,
+        love.graphics.printf(lang[Current_lang].dialogs.save_error_title, popup.content.x + 3, popup.content.y,
             popupWidth - 24, "center")
         love.graphics.printf(popup.content.label, popup.content.x + 3, popup.content.y + 22, popupWidth - 24, "center")
     elseif customPopupShown then

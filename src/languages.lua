@@ -40,6 +40,11 @@ local lang = {
             reset = "&Reset",
             cancel = "Cancel",
         },
+        high_score_labels = {
+            easy = "Beginner",
+            medium = "Intermediate",
+            hard = "Expert",
+        },
         dialogs = {
             save_error_title = "Error reading times file",
             save_error_body = "Unable to access save directory\ntimes will not be saved!",

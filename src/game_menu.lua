@@ -245,11 +245,9 @@ function game_menu.updateSubmenuXPos()
 end
 
 function game_menu.load()
-    local current_lang = "en"
-
     items = {
         {
-            label = lang[current_lang].menu_titles.game,
+            label = lang[Current_lang].menu_titles.game,
             x = menuItems.game.x,
             y = menuItems.game.y,
             w = menuItems.game.w,
@@ -262,7 +260,7 @@ function game_menu.load()
             end
         },
         {
-            label = lang[current_lang].menu_titles.options,
+            label = lang[Current_lang].menu_titles.options,
             x = menuItems.options.x,
             y = menuItems.options.y,
             w = menuItems.options.w,
@@ -275,7 +273,7 @@ function game_menu.load()
             end
         },
         {
-            label = lang[current_lang].menu_titles.help,
+            label = lang[Current_lang].menu_titles.help,
             x = menuItems.help.x,
             y = menuItems.help.y,
             w = menuItems.help.w,
@@ -291,7 +289,7 @@ function game_menu.load()
 
     helpSubItems = {
         {
-            label = lang[current_lang].help_menu.about,
+            label = lang[Current_lang].help_menu.about,
             x = subItems.help.x,
             y = helpYValues.y1,
             w = menuWidth,
@@ -307,7 +305,7 @@ function game_menu.load()
 
     optionsSubItems = {
         {
-            label = lang[current_lang].options_menu.marks,
+            label = lang[Current_lang].options_menu.marks,
             x = subItems.options.x,
             y = optionsYValues.y1,
             w = menuWidth,
@@ -321,7 +319,7 @@ function game_menu.load()
             onClick = toggleQMarks
         },
         {
-            label = lang[current_lang].options_menu.sound,
+            label = lang[Current_lang].options_menu.sound,
             x = subItems.options.x,
             y = optionsYValues.y2,
             w = menuWidth,
@@ -338,7 +336,7 @@ function game_menu.load()
 
     gameSubItems = {
         {
-            label = lang[current_lang].game_menu.new,
+            label = lang[Current_lang].game_menu.new,
             x = subItems.game.x,
             y = gameYValues.y1,
             w = menuWidth,
@@ -361,7 +359,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = lang[current_lang].game_menu.beginner,
+            label = lang[Current_lang].game_menu.beginner,
             key = "easy",
             x = subItems.game.x,
             y = gameYValues.y3,
@@ -376,7 +374,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = lang[current_lang].game_menu.intermediate,
+            label = lang[Current_lang].game_menu.intermediate,
             key = "medium",
             x = subItems.game.x,
             y = gameYValues.y4,
@@ -391,7 +389,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = lang[current_lang].game_menu.expert,
+            label = lang[Current_lang].game_menu.expert,
             key = "hard",
             x = subItems.game.x,
             y = gameYValues.y5,
@@ -406,7 +404,7 @@ function game_menu.load()
             onClick = game_menu.startNewGame
         },
         {
-            label = lang[current_lang].game_menu.custom,
+            label = lang[Current_lang].game_menu.custom,
             key = "custom",
             x = subItems.game.x,
             y = gameYValues.y6,
@@ -431,7 +429,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = lang[current_lang].game_menu.best_times,
+            label = lang[Current_lang].game_menu.best_times,
             x = subItems.game.x,
             y = gameYValues.y8,
             w = menuWidth,
@@ -454,7 +452,7 @@ function game_menu.load()
             sep = true
         },
         {
-            label = lang[current_lang].game_menu.exit,
+            label = lang[Current_lang].game_menu.exit,
             x = subItems.game.x,
             y = gameYValues.y10,
             w = menuWidth,
@@ -549,7 +547,7 @@ function game_menu.drawSubMenu(menu)
                 -- Text
                 love.graphics.setFont(font)
                 love.graphics.setColor(textColor)
-                if subitem.label == "&New" then
+                if subitem.label == lang[Current_lang].game_menu.new then
                     love.graphics.printf("F2", subitem.x - 20, subitem.y + subitem.labelYOffset, subitem.w,
                         "right")
                 end
