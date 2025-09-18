@@ -52,7 +52,7 @@ jobs:
         product-name: ${{ env.PRODUCT_NAME }}
         bundle-id: ${{ env.BUNDLE_ID }}
         description: Classic Windows XP Minesweeper clone
-        version-string: "1.3.0"
+        version-string: "1.3.1"
         icon-path: ./assets/icons/iconbig.png
         love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
         output-folder: ${{ env.OUTPUT_FOLDER }}
