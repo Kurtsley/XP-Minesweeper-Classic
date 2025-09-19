@@ -31,6 +31,10 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](h
 - Alt-S - Toggle sound
 ### Help Menu
 - Alt-A - Show about popup
+### Custom Popup
+- Alt-H - Select height input box
+- Alt-W - Select width input box
+- Alt-M - Select mines input box
 
 ## Tech Stack
 
