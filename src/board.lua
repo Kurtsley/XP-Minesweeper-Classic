@@ -146,14 +146,10 @@ function board.addMinesExcluding(safeRow, safeCol)
             local tile = board.grid[r][c]
             local x = Board_start_x + (c - 1) * tilesets.cell.size
             local y = Board_start_y + (r - 1) * tilesets.cell.size
-            local col = math.floor((x - Board_start_x) / tilesets.cell.size) + 1
-            local row = math.floor((y - Board_start_y) / tilesets.cell.size) + 1
-            local adjacentMines = board.countAdjacentMinesOrFlags(row, col, board.countKeys.mines)
-            if adjacentMines > 0 then
-                tile.adjacentMines = adjacentMines
-            else
-                tile.isBlank = true
-            end
+            local adjacentMines = board.countAdjacentMinesOrFlags(r, c, board.countKeys.mines)
+            tile.adjacentMines = adjacentMines
+            tile.isBlank = (adjacentMines == 0)
+            tile.isCovered = false
         end
     end
 end
@@ -205,7 +201,6 @@ function board.update()
 
             if mouseX > tileX and mouseX <= tileX + tileWidth and
                 mouseY > tileY and mouseY <= tileY + tileHeight then
-                    
                 -- Cheat pixel
                 if tile.isMine then
                     CheatMineHover = true

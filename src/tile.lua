@@ -61,10 +61,7 @@ function Tile.revealTile(startRow, startCol)
             return
         end
 
-        local adjacentMines = board.countAdjacentMinesOrFlags(row, col, board.countKeys.mines)
-        tile.adjacentMines = adjacentMines
-
-        if adjacentMines == 0 then
+        if tile.adjacentMines == 0 then
             local dirs = {
                 { -1, 1 },
                 { -1, 0 },
@@ -91,7 +88,6 @@ function Tile.revealTile(startRow, startCol)
         end
 
         sound.play("pop")
-
         ::continue::
     end
 end
