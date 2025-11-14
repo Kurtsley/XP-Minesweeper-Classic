@@ -81,6 +81,7 @@ function gameplay.newGame()
         gameState.resetMinecount()
         timer:reset()
         counter.init()
+        popup.load()
         file_manager.save_difficulty(gameState.getDifficulty())
         InitGame = true
     end

@@ -80,10 +80,10 @@ function love.load()
 
     sound.load()
     game_menu.load()
-    popup.load()
-    file_manager.init()
     gameplay.initGame(gameState.getDifficulty())
     windowing.centerWindow()
+    popup.load()
+    file_manager.init()
 
     input.registerKeyPress(inputHandlers.onKeyPressed)
     input.registerMousePress(inputHandlers.onMousePressed)

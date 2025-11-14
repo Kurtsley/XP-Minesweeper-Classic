@@ -149,7 +149,7 @@ function board.addMinesExcluding(safeRow, safeCol)
             local adjacentMines = board.countAdjacentMinesOrFlags(r, c, board.countKeys.mines)
             tile.adjacentMines = adjacentMines
             tile.isBlank = (adjacentMines == 0)
-            tile.isCovered = false
+            tile.isCovered = true
         end
     end
 end
