@@ -11,8 +11,13 @@ local lang = require("src.languages")
 local gameState = state.gameState
 local timer = state.timer
 
-local popupWidth = 176
+local g = love.graphics
+
+local popupWidth = 164
 local popupHeight = 160
+local popupTitle
+local popupXOffset = 10
+local popupYOffset = 5
 
 local popup = {
     shouldShow = false,
@@ -33,9 +38,37 @@ local customPopupShown = false
 local highScorePopupShown = false
 local saveErrorPopupShown = false
 
-local smallFont = love.graphics.newFont(10)
-local medFont = love.graphics.newFont(14)
-local bigFont = love.graphics.newFont(20)
+local shadowOffset = 6
+local questionMarkXOffset = 34
+
+local questionMarkRad = 16
+local cornerRad = 6
+local buttonXOffset = 12
+local buttonW, buttonH = 70, 24
+local topBarHeight = 24
+local bottomGrayH = 44
+local cancelXOffset = 34
+local messageTextOffset = 62
+local shadowOffset = 6
+local buttonW, buttonH = 60, 22
+
+-- Colors
+local topBarColor = { 236 / 255, 246 / 255, 249 / 255 }
+local backgroundColor = { 240 / 255, 240 / 255, 240 / 255 }
+local textColor = { 0, 0, 0 }
+local shadowColor = { 0, 0, 0, 0.2 }
+local buttonBorderColor = { 220 / 255, 220 / 255, 220 / 255 }
+local buttonBorderHoverColor = { 0, 120 / 255, 212 / 255 }
+local buttonBackgroundColor = { 253 / 255, 253 / 255, 253 / 255 }
+local buttonBackgroundHoverColor = { 224 / 255, 238 / 255, 249 / 255 }
+local bottomGray = { 240 / 255, 240 / 255, 240 / 255 }
+local cancelRed = { 240 / 255, 56 / 255, 36 / 255 }
+local disabledGray = { 150 / 255, 150 / 255, 150 / 255 }
+local inputBoxBackground = { 1, 1, 1 }
+
+local smallFont = g.newFont(10)
+local medFont = g.newFont(14)
+local bigFont = g.newFont(20)
 
 local popupImage
 local alt
@@ -175,7 +208,7 @@ function popup.textinput(t)
 end
 
 function popup.load()
-    popupImage = love.graphics.newImage("assets/images/popupdark.png")
+    popupImage = g.newImage("assets/images/popupdark.png")
 end
 
 function popup.update(dt)
@@ -284,7 +317,7 @@ function popup.setup(state)
 
     local difficulty = gameState.getDifficulty()
 
-    local buttonY = (GameHeight / 2) + 35
+    local buttonY = (GameHeight / 2) - (popup.content.h / 2) + popup.content.h - (buttonH + 10)
 
     local OKCentered = { (GameWidth / 2) - 30, buttonY }
     local OKRight = { (GameWidth / 2) + 6, buttonY }
@@ -307,39 +340,33 @@ function popup.setup(state)
             label = lang[Current_lang].buttons.ok,
             x = OKbtnX,
             y = OKbtnY,
-            w = 60,
-            h = 26,
-            cornerRadius = 8,
-            normalColor = { 234 / 255, 234 / 255, 234 / 255 },
-            hoverColor = { 208 / 255, 208 / 255, 208 / 255 },
+            w = buttonW,
+            h = buttonH,
+            cornerRadius = 4,
             onClick = popup.onClickOK
         },
         {
             label = lang[Current_lang].buttons.reset,
             x = resetBtnX,
             y = resetBtnY,
-            w = 60,
-            h = 26,
-            cornerRadius = 8,
-            normalColor = { 234 / 255, 234 / 255, 234 / 255 },
-            hoverColor = { 208 / 255, 208 / 255, 208 / 255 },
+            w = buttonW,
+            h = buttonH,
+            cornerRadius = 4,
             onClick = popup.onClickReset
         },
         {
             label = lang[Current_lang].buttons.cancel,
             x = cancelBtnX,
             y = cancelBtnY,
-            w = 60,
-            h = 26,
-            cornerRadius = 8,
-            normalColor = { 234 / 255, 234 / 255, 234 / 255 },
-            hoverColor = { 208 / 255, 208 / 255, 208 / 255 },
+            w = buttonW,
+            h = buttonH,
+            cornerRadius = 4,
             onClick = popup.onClickCancel
         }
     }
 
     local inputX = (GameWidth / 2) - 18
-    local inputY = (GameHeight / 2) - 61
+    local inputY = (GameHeight / 2) - 40
     local inputYOffset = 26
 
     inputBoxes = {
@@ -406,6 +433,7 @@ function popup.setup(state)
     if state == "HighScore" then
         local newTime = timer:getTime()
         local roundTime = tonumber(string.format("%.3f", newTime))
+        popupTitle = "High Score"
 
         local diffCalc = {
             easy = lang[Current_lang].high_score_labels.easy,
@@ -431,12 +459,15 @@ function popup.setup(state)
         local aboutLabel = string.format("Version %s\nCopyright (c) 2025 Kurtsley", config.version)
         local aboutW = smallFont:getWidth(aboutLabel)
         local aboutX = (GameWidth / 2) - (aboutW / 2)
-        local aboutY = (GameHeight / 2) - 48
+        local aboutY = (GameHeight / 2) - 38
+
+        popupTitle = "About"
 
         popup.content = {
             label = aboutLabel,
             x = aboutX,
             y = aboutY,
+            h = 130,
             buttons = { buttons[1] },
             linkButtons = linkButtons,
         }
@@ -446,10 +477,13 @@ function popup.setup(state)
         local saveErrorX = (GameWidth / 2) - (saveErrorW / 2)
         local saveErrorY = (GameHeight / 2) - 54
 
+        popupTitle = "Error"
+
         popup.content = {
             label = saveErrorLabel,
             x = saveErrorX,
             y = saveErrorY,
+            h = 130,
             buttons = { buttons[1] },
         }
     elseif state == "Best" then
@@ -464,23 +498,148 @@ function popup.setup(state)
             times.hard
         )
 
+        popupTitle = "Mine Sweepers"
+
         popup.content = {
             label = bestTimesLabel,
             x = x,
             y = y,
+            h = 130,
             buttons = { buttons[1], buttons[2] }
         }
     elseif state == "Custom" then
         popup.content = {
             inputBoxes = inputBoxes,
+            h = 160,
             buttons = {
                 buttons[1],
                 buttons[3]
             },
         }
+        popupTitle = "Custom Field"
     else
         error("Unkown popup state")
     end
+end
+
+function popup.drawNew()
+    if not popup.shouldShow then return end
+
+    local centerX = (GameWidth / 2) - (popupWidth / 2)
+    local centerY = (GameHeight / 2) - (popup.content.h / 2)
+
+    -- Shadow
+    g.setColor(shadowColor)
+    -- Lowering the window by one because the shadow blends into the tiles...
+    g.rectangle("fill", centerX, centerY + 1, popupWidth + shadowOffset, popup.content.h + shadowOffset, cornerRad,
+        cornerRad)
+    -- Top bar
+    g.setFont(smallFont)
+    g.setColor(topBarColor)
+    g.rectangle("fill", centerX, centerY, popupWidth, topBarHeight, cornerRad, cornerRad)
+    g.rectangle("fill", centerX, centerY + (topBarHeight / 2), popupWidth, topBarHeight / 2)
+    -- Title
+    g.setColor(textColor)
+    local labelWidth = smallFont:getWidth(popupTitle)
+    g.printf(popupTitle, centerX + popupXOffset, centerY + popupYOffset, labelWidth, "left")
+    -- Body
+    g.setColor(backgroundColor)
+    g.rectangle("fill", centerX, centerY + topBarHeight, popupWidth, popup.content.h - topBarHeight, cornerRad,
+        cornerRad)
+    g.rectangle("fill", centerX, centerY + topBarHeight, popupWidth, topBarHeight)
+
+    if highScorePopupShown then
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(string.format(lang[Current_lang].dialogs.high_score, popup.content.label), popup
+            .content
+            .x, popup.content.y,
+            popupWidth - 40,
+            "center")
+        g.setFont(bigFont)
+        g.printf(string.format("%.3f", popup.content.time), popup.content.x, popup.content.y + 32,
+            popupWidth - 40,
+            "center")
+    elseif aboutPopupShown then
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(popup.content.label, popup.content.x, popup.content.y, popupWidth - 40, "center")
+        for _, link in ipairs(popup.content.linkButtons) do
+            local hovered = within(link.x, link.y, link.w, link.h)
+            local color = hovered and link.hover or link.color
+            g.setColor(color)
+            g.printf(link.label, link.x, link.y, link.w, "center")
+        end
+    elseif bestTimesPopupShown then
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(lang[Current_lang].dialogs.best_times_title, popup.content.x, popup.content.y,
+            popupWidth - 40, "center")
+        g.printf(popup.content.label, popup.content.x, popup.content.y + 22, popupWidth - 40, "center")
+    elseif saveErrorPopupShown then
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(lang[Current_lang].dialogs.save_error_title, popup.content.x + 3, popup.content.y,
+            popupWidth - 24, "center")
+        g.printf(popup.content.label, popup.content.x + 3, popup.content.y + 22, popupWidth - 24, "center")
+    elseif customPopupShown then
+        -- Input boxes
+        for _, inputBox in pairs(popup.content.inputBoxes) do
+            g.setColor(textColor)
+            g.setFont(smallFont)
+            g.printf(strings.displayStr(inputBox.label), inputBox.x - 40, inputBox.y + 4, popupWidth - 40,
+                "left")
+            -- Underline
+            if strings.hasHotkey(inputBox.label) then
+                strings.drawUnderline(inputBox.label, inputBox.x - 40, inputBox.y + 4, inputBox.w, smallFont, true, false,
+                    alt)
+            end
+            g.setColor(inputBoxBackground)
+            g.rectangle("fill", inputBox.x, inputBox.y, inputBox.w, inputBox.h)
+            g.setColor(0, 0, 0)
+            g.rectangle("line", inputBox.x, inputBox.y, inputBox.w, inputBox.h)
+            -- Input text
+            g.setColor(textColor)
+            g.setFont(medFont)
+            -- First click highlight box
+            if inputBox.active and inputBox.firstClick and highlightBoxVisible then
+                local textWidth = medFont:getWidth(inputBox.text)
+                local textX = inputBox.x + (inputBox.w - textWidth) / 2
+                g.rectangle("fill", textX, inputBox.y + 3, textWidth, medFont:getHeight())
+                g.setColor(1, 1, 1)
+            end
+            g.printf(inputBox.text, inputBox.x, inputBox.y + 3, inputBox.w, "center")
+            -- Text caret
+            if inputBox.active and not inputBox.firstClick and caretVisible then
+                local textWidth = medFont:getWidth(inputBox.text)
+                local textX = inputBox.x + (inputBox.w - textWidth) / 2
+                local caretX = textX + textWidth
+                local caretY = inputBox.y + 3
+                g.setColor(textColor)
+                g.line(caretX, caretY, caretX, caretY + medFont:getHeight())
+            end
+        end
+    end
+
+    for _, btn in ipairs(popup.content.buttons) do
+        local hovered = within(btn.x, btn.y, btn.w, btn.h)
+        local bgColor = hovered and buttonBackgroundHoverColor or buttonBackgroundColor
+        g.setColor(bgColor)
+        g.rectangle("fill", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
+        local borderColor = hovered and buttonBorderHoverColor or buttonBorderColor
+        g.setColor(borderColor)
+        g.rectangle("line", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
+        -- Text
+        g.setFont(smallFont)
+        g.setColor(textColor)
+        g.printf(strings.displayStr(btn.label), btn.x, btn.y + 6, btn.w, "center")
+
+        if strings.hasHotkey(btn.label) then
+            strings.drawUnderline(btn.label, btn.x - 8, btn.y + 6, btn.w, smallFont, false, true)
+        end
+    end
+
+    g.setColor(1, 1, 1)
 end
 
 function popup.draw()
@@ -489,83 +648,84 @@ function popup.draw()
     local textColor = { 0, 0, 0 }
     local inputBoxActiveColor = { 1, 1, 1 }
 
-    love.graphics.draw(popupImage, (GameWidth / 2) - (popupWidth / 2), (GameHeight / 2) - (popupHeight / 2))
-    love.graphics.setColor(0, 0, 0)
-    love.graphics.rectangle("line", (GameWidth / 2) - (popupWidth / 2), (GameHeight / 2) - (popupHeight / 2), popupWidth,
+    g.draw(popupImage, (GameWidth / 2) - (popupWidth / 2), (GameHeight / 2) - (popupHeight / 2))
+    g.setColor(0, 0, 0)
+    g.rectangle("line", (GameWidth / 2) - (popupWidth / 2), (GameHeight / 2) - (popupHeight / 2), popupWidth,
         popupHeight)
 
     if highScorePopupShown then
-        love.graphics.setColor(textColor)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf(string.format(lang[Current_lang].dialogs.high_score, popup.content.label), popup
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(string.format(lang[Current_lang].dialogs.high_score, popup.content.label), popup
             .content
             .x, popup.content.y,
             popupWidth - 40,
             "center")
-        love.graphics.setFont(bigFont)
-        love.graphics.printf(string.format("%.3f", popup.content.time), popup.content.x, popup.content.y + 32,
+        g.setFont(bigFont)
+        g.printf(string.format("%.3f", popup.content.time), popup.content.x, popup.content.y + 32,
             popupWidth - 40,
             "center")
     elseif aboutPopupShown then
-        love.graphics.setColor(textColor)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf(popup.content.label, popup.content.x, popup.content.y, popupWidth - 40, "center")
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(popup.content.label, popup.content.x, popup.content.y, popupWidth - 40, "center")
         for _, link in ipairs(popup.content.linkButtons) do
             local hovered = within(link.x, link.y, link.w, link.h)
             local color = hovered and link.hover or link.color
-            love.graphics.setColor(color)
-            love.graphics.printf(link.label, link.x, link.y, link.w, "center")
+            g.setColor(color)
+            g.printf(link.label, link.x, link.y, link.w, "center")
         end
     elseif bestTimesPopupShown then
-        love.graphics.setColor(textColor)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf(lang[Current_lang].dialogs.best_times_title, popup.content.x, popup.content.y,
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(lang[Current_lang].dialogs.best_times_title, popup.content.x, popup.content.y,
             popupWidth - 40, "center")
-        love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + 22, popupWidth - 40, "center")
+        g.printf(popup.content.label, popup.content.x, popup.content.y + 22, popupWidth - 40, "center")
     elseif saveErrorPopupShown then
-        love.graphics.setColor(textColor)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf(lang[Current_lang].dialogs.save_error_title, popup.content.x + 3, popup.content.y,
+        g.setColor(textColor)
+        g.setFont(smallFont)
+        g.printf(lang[Current_lang].dialogs.save_error_title, popup.content.x + 3, popup.content.y,
             popupWidth - 24, "center")
-        love.graphics.printf(popup.content.label, popup.content.x + 3, popup.content.y + 22, popupWidth - 24, "center")
+        g.printf(popup.content.label, popup.content.x + 3, popup.content.y + 22, popupWidth - 24, "center")
     elseif customPopupShown then
         -- Input boxes
         for _, inputBox in pairs(popup.content.inputBoxes) do
-            love.graphics.setColor(textColor)
-            love.graphics.setFont(smallFont)
-            love.graphics.printf(strings.displayStr(inputBox.label), inputBox.x - 40, inputBox.y + 4, popupWidth - 40,
+            g.setColor(textColor)
+            g.setFont(smallFont)
+            g.printf(strings.displayStr(inputBox.label), inputBox.x - 40, inputBox.y + 4, popupWidth - 40,
                 "left")
             -- Underline
             if strings.hasHotkey(inputBox.label) then
-                strings.drawUnderline(inputBox.label, inputBox.x - 40, inputBox.y + 4, inputBox.w, smallFont, true, false, alt)
+                strings.drawUnderline(inputBox.label, inputBox.x - 40, inputBox.y + 4, inputBox.w, smallFont, true, false,
+                    alt)
             end
             if inputBox.active then
-                love.graphics.setColor(inputBoxActiveColor)
+                g.setColor(inputBoxActiveColor)
             else
-                love.graphics.setColor(234 / 255, 234 / 255, 234 / 255)
+                g.setColor(234 / 255, 234 / 255, 234 / 255)
             end
-            love.graphics.rectangle("fill", inputBox.x, inputBox.y, inputBox.w, inputBox.h)
-            love.graphics.setColor(0, 0, 0)
-            love.graphics.rectangle("line", inputBox.x, inputBox.y, inputBox.w, inputBox.h)
+            g.rectangle("fill", inputBox.x, inputBox.y, inputBox.w, inputBox.h)
+            g.setColor(0, 0, 0)
+            g.rectangle("line", inputBox.x, inputBox.y, inputBox.w, inputBox.h)
             -- Input text
-            love.graphics.setColor(textColor)
-            love.graphics.setFont(medFont)
+            g.setColor(textColor)
+            g.setFont(medFont)
             -- First click highlight box
             if inputBox.active and inputBox.firstClick and highlightBoxVisible then
                 local textWidth = medFont:getWidth(inputBox.text)
                 local textX = inputBox.x + (inputBox.w - textWidth) / 2
-                love.graphics.rectangle("fill", textX, inputBox.y + 3, textWidth, medFont:getHeight())
-                love.graphics.setColor(1, 1, 1)
+                g.rectangle("fill", textX, inputBox.y + 3, textWidth, medFont:getHeight())
+                g.setColor(1, 1, 1)
             end
-            love.graphics.printf(inputBox.text, inputBox.x, inputBox.y + 3, inputBox.w, "center")
+            g.printf(inputBox.text, inputBox.x, inputBox.y + 3, inputBox.w, "center")
             -- Text caret
             if inputBox.active and not inputBox.firstClick and caretVisible then
                 local textWidth = medFont:getWidth(inputBox.text)
                 local textX = inputBox.x + (inputBox.w - textWidth) / 2
                 local caretX = textX + textWidth
                 local caretY = inputBox.y + 3
-                love.graphics.setColor(textColor)
-                love.graphics.line(caretX, caretY, caretX, caretY + medFont:getHeight())
+                g.setColor(textColor)
+                g.line(caretX, caretY, caretX, caretY + medFont:getHeight())
             end
         end
     end
@@ -574,19 +734,19 @@ function popup.draw()
         local hovered = within(btn.x, btn.y, btn.w, btn.h)
         local color = hovered and btn.hoverColor or btn.normalColor
 
-        love.graphics.setColor(color)
-        love.graphics.rectangle("fill", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("line", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
-        love.graphics.setFont(smallFont)
-        love.graphics.printf(strings.displayStr(btn.label), btn.x, btn.y + 6, btn.w, "center")
+        g.setColor(color)
+        g.rectangle("fill", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
+        g.setColor(0, 0, 0)
+        g.rectangle("line", btn.x, btn.y, btn.w, btn.h, btn.cornerRadius, btn.cornerRadius)
+        g.setFont(smallFont)
+        g.printf(strings.displayStr(btn.label), btn.x, btn.y + 6, btn.w, "center")
 
         if strings.hasHotkey(btn.label) then
             strings.drawUnderline(btn.label, btn.x - 8, btn.y + 6, btn.w, smallFont, false, true)
         end
     end
 
-    love.graphics.setColor(1, 1, 1)
+    g.setColor(1, 1, 1)
 end
 
 return popup

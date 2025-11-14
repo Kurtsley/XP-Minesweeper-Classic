@@ -107,7 +107,7 @@ function love.draw()
     counterTimer.draw(gameState.getMineCount(), timer:getTime())
     faceButton:draw()
     game_menu.draw()
-    popup.draw()
+    popup.drawNew()
 
     love.graphics.pop()
 end
