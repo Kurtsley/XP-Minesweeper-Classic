@@ -1,4 +1,4 @@
--- MIT License, Copyright (c) 2025 Kurtsley
+-- MIT License, Copyright (c) 2025-2026 Kurtsley
 
 -- file_manager.lua
 -- Handles saving and loading scores

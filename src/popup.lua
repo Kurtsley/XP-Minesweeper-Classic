@@ -1,4 +1,4 @@
--- MIT License, Copyright (c) 2025 Kurtsley
+-- MIT License, Copyright (c) 2025-2026 Kurtsley
 
 -- popup.lua
 -- Shows a popup at victory or best times, or even the about page
@@ -467,7 +467,7 @@ function popup.setup(state)
         file_manager.save_times(difficulty, roundTime)
     elseif state == "About" then
         local aboutTitle = "About"
-        local aboutLabel = string.format("Version %s\nCopyright (c) 2025 Kurtsley", config.version)
+        local aboutLabel = string.format("Version %s\nCopyright (c) 2025-2026 Kurtsley", config.version)
         local aboutW = smallFont:getWidth(aboutLabel)
         local aboutX = (GameWidth / 2) - (aboutW / 2)
         local aboutY = (GameHeight / 2) - 48

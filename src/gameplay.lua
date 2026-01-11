@@ -1,4 +1,4 @@
--- MIT License, Copyright (c) 2025 Kurtsley
+-- MIT License, Copyright (c) 2025-2026 Kurtsley
 
 -- gameplay.lua
 -- Handles all gameplay related stuff

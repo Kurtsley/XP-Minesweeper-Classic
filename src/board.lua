@@ -1,4 +1,4 @@
--- MIT License, Copyright (c) 2025 Kurtsley
+-- MIT License, Copyright (c) 2025-2026 Kurtsley
 
 -- board.lua
 -- Handle board logic and creation

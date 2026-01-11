@@ -1,4 +1,4 @@
--- MIT License, Copyright (c) 2025 Kurtsley
+-- MIT License, Copyright (c) 2025-2026 Kurtsley
 
 -- level_builder.lua
 -- Handles building of levels
