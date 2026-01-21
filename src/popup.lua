@@ -418,15 +418,21 @@ function popup.setup(state)
     local linkColor = { 0, 0, 238 / 255 }
     local linkHoverColor = { 0, 102 / 255, 1 }
 
-    local sourceLabel = "Source on Github"
+    local sourceLabel = "Source"
     local sourceLink = "https://github.com/Kurtsley/XP-Minesweeper-Classic"
     local sourceLinkW = smallFont:getWidth(sourceLabel)
     local sourceLinkX = (GameWidth / 2) - (sourceLinkW / 2)
-    local sourceLinkY = (GameHeight / 2) - 10
+    local sourceLinkY = (GameHeight / 2) - 4
 
+    local bugLabel = "Bug report"
+    local bugLink = "https://forms.gle/uUYUTv3fne1waideA"
+    local bugLabelW = smallFont:getWidth(bugLabel)
+    local bugLabelX = (GameWidth / 2) - (bugLabelW / 2)
+    local bugLabelY = sourceLinkY + 14
 
     linkButtons = {
         {
+            id = "source",
             label = sourceLabel,
             link = sourceLink,
             x = sourceLinkX,
@@ -436,6 +442,18 @@ function popup.setup(state)
             color = linkColor,
             hover = linkHoverColor,
             onClick = clickLink,
+        },
+        {
+            id = "bug",
+            label = bugLabel,
+            link = bugLink,
+            x = bugLabelX,
+            y = bugLabelY,
+            w = bugLabelW,
+            h = linkH,
+            color = linkColor,
+            hover = linkHoverColor,
+            onClick = clickLink
         }
     }
 
@@ -470,13 +488,14 @@ function popup.setup(state)
         local aboutLabel = string.format("Version %s\nCopyright (c) 2025-2026 Kurtsley", config.version)
         local aboutW = smallFont:getWidth(aboutLabel)
         local aboutX = (GameWidth / 2) - (aboutW / 2)
-        local aboutY = (GameHeight / 2) - 48
+        local aboutY = (GameHeight / 2) - 38
 
         popup.content = {
             title = aboutTitle,
             label = aboutLabel,
             x = aboutX,
             y = aboutY,
+            w = aboutW,
             buttons = { buttons[1] },
             linkButtons = linkButtons,
         }
@@ -581,7 +600,7 @@ function popup.draw()
         love.graphics.setFont(medFont)
         love.graphics.print(popup.content.title, centerX + titleOffset * 2, centerY + titleOffset)
         love.graphics.setFont(smallFont)
-        love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + topBarHeight, popupWidth - 40,
+        love.graphics.printf(popup.content.label, popup.content.x, popup.content.y + topBarHeight, popup.content.w,
             "center")
         for _, link in ipairs(popup.content.linkButtons) do
             local hovered = within(link.x, link.y + topBarHeight, link.w, link.h)
