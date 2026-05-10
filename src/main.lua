@@ -17,6 +17,7 @@ local popup = require("src.popup")
 local file_manager = require("src.file_manager")
 local sound = require("src.sound")
 local windowing = require("src.windowing")
+local fonts = require("src.fonts")
 
 local gameState = state.gameState
 local timer = state.timer
@@ -78,6 +79,7 @@ function love.load()
         end
     end
 
+    fonts.load()
     sound.load()
     game_menu.load()
     gameplay.initGame(gameState.getDifficulty())

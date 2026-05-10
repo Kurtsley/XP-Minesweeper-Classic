@@ -26,17 +26,21 @@ function strings.drawUnderline(str, x, y, w, font, sub, but, localAlt)
 
     if alt or but then
         for i = 1, #str do
+            local displayText = str:gsub("&", "")
+
             if str:sub(i, i) == "&" then
                 local hotkeyCharIndex = i + 1
-                local textX = sub and x or (x + (w - font:getWidth(str)))
+                local textX = sub and x or (x + (w - font:getWidth(displayText)) / 2)
 
-                local preText = str:sub(1, hotkeyCharIndex - 1):gsub("&", "")
+                local preText = str:sub(1, i - 1):gsub("&", "")
                 local offsetX = font:getWidth(preText)
 
                 local charWidth = font:getWidth(str:sub(hotkeyCharIndex, hotkeyCharIndex))
 
                 love.graphics.line(textX + offsetX, y + font:getHeight(), textX + offsetX + charWidth,
                     y + font:getHeight())
+
+                break
             end
         end
     end

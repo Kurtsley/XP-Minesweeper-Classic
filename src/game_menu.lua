@@ -10,12 +10,14 @@ local popup = require("src.popup")
 local strings = require("src.strings")
 local file_manager = require("src.file_manager")
 local lang = require("src.languages")
+local fonts = require("src.fonts")
+local helper = require("src.helper")
 local gameState = state.gameState
 
 local game_menu = {}
 
 -- Menu Globals --
-local font = love.graphics.newFont(12)
+local font
 local menuWidth = 150
 local menuHeight = 24
 local menuYOffset = 5
@@ -245,6 +247,8 @@ function game_menu.updateSubmenuXPos()
 end
 
 function game_menu.load()
+    font = fonts.menu
+
     items = {
         {
             label = lang[Current_lang].menu_titles.game,
@@ -528,6 +532,8 @@ function game_menu.submenuClose(menu)
 end
 
 function game_menu.drawSubMenu(menu)
+    love.graphics.setFont(font)
+
     if menu == "Game" then
         -- Game submenu
         love.graphics.setColor(subItemNormalColor)
@@ -545,14 +551,14 @@ function game_menu.drawSubMenu(menu)
                 love.graphics.setColor(color)
                 love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h)
                 -- Text
-                love.graphics.setFont(font)
                 love.graphics.setColor(textColor)
                 if subitem.label == lang[Current_lang].game_menu.new then
-                    love.graphics.printf("F2", subitem.x - 20, subitem.y + subitem.labelYOffset, subitem.w,
+                    love.graphics.printf("F2", helper.round(subitem.x - 20),
+                        helper.round(subitem.y + subitem.labelYOffset), subitem.w,
                         "right")
                 end
-                love.graphics.printf(strings.displayStr(subitem.label), subitem.x + subitem.labelXOffset,
-                    subitem.y + subitem.labelYOffset, subitem.w, "left")
+                love.graphics.printf(strings.displayStr(subitem.label), helper.round(subitem.x + subitem.labelXOffset),
+                    helper.round(subitem.y + subitem.labelYOffset), subitem.w, "left")
                 -- Hotkey underline
                 if strings.hasHotkey(subitem.label) then
                     strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset,
@@ -581,13 +587,13 @@ function game_menu.drawSubMenu(menu)
             love.graphics.setColor(color)
             love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h)
             -- Text
-            love.graphics.setFont(font)
             love.graphics.setColor(textColor)
-            love.graphics.printf(strings.displayStr(subitem.label), subitem.x + subitem.labelXOffset,
-                subitem.y + subitem.labelYOffset, subitem.w, "left")
+            love.graphics.printf(strings.displayStr(subitem.label), helper.round(subitem.x + subitem.labelXOffset),
+                helper.round(subitem.y + subitem.labelYOffset), subitem.w, "left")
             -- Hotkey underline
             if strings.hasHotkey(subitem.label) then
-                strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset, subitem.y + subitem.labelYOffset,
+                strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset,
+                    subitem.y + subitem.labelYOffset,
                     subitem.w, font, true)
             end
             -- Check mark
@@ -611,13 +617,13 @@ function game_menu.drawSubMenu(menu)
             love.graphics.setColor(color)
             love.graphics.rectangle("fill", subitem.x, subitem.y, subitem.w, subitem.h)
             -- Text
-            love.graphics.setFont(font)
             love.graphics.setColor(textColor)
-            love.graphics.printf(strings.displayStr(subitem.label), subitem.x + subitem.labelXOffset,
-                subitem.y + subitem.labelYOffset, subitem.w, "left")
+            love.graphics.printf(strings.displayStr(subitem.label), helper.round(subitem.x + subitem.labelXOffset),
+                helper.round(subitem.y + subitem.labelYOffset), subitem.w, "left")
             -- Hotkey underline
             if strings.hasHotkey(subitem.label) then
-                strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset, subitem.y + subitem.labelYOffset,
+                strings.drawUnderline(subitem.label, subitem.x + subitem.labelXOffset,
+                    subitem.y + subitem.labelYOffset,
                     subitem.w, font, true)
             end
         end
@@ -627,6 +633,8 @@ function game_menu.drawSubMenu(menu)
 end
 
 function game_menu.draw()
+    love.graphics.setFont(font)
+
     -- Main menu
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("fill", 0, 0, GameWidth, MenuHeight)
@@ -649,12 +657,13 @@ function game_menu.draw()
         love.graphics.setColor(color)
         love.graphics.rectangle("fill", item.x, item.y, item.w, item.h)
         -- Text
-        love.graphics.setFont(font)
         love.graphics.setColor(textColor)
-        love.graphics.printf(strings.displayStr(item.label), item.x, item.y + item.labelYOffset, item.w, "center")
+        love.graphics.printf(strings.displayStr(item.label), helper.round(item.x),
+            helper.round(item.y + item.labelYOffset), item.w, "center")
         -- Underline
         if strings.hasHotkey(item.label) then
-            strings.drawUnderline(item.label, item.x, item.y + item.labelYOffset, item.w, font)
+            strings.drawUnderline(item.label, item.x, item.y + item.labelYOffset, item.w,
+                font)
         end
     end
     if game_menu.gameSubMenuOpen then
