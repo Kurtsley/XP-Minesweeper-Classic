@@ -70,6 +70,14 @@ local function within(btnX, btnY, btnW, btnH)
     return false
 end
 
+local function updatePopupCoords()
+    local screenW, screenH = love.graphics.getDimensions()
+    local scaleFactor = config.scaleFactor
+
+    centerX = ((screenW / scaleFactor) - popupWidth) / 2
+    centerY = ((screenH / scaleFactor) - popupHeight) / 2
+end
+
 local function clearInputBoxes()
     for _, box in pairs(inputBoxes) do
         box.active = false
@@ -203,13 +211,11 @@ end
 function popup.load()
     popupImage = love.graphics.newImage("assets/images/newpopup.png")
 
+    updatePopupCoords()
+
     smallFont = fonts.small
     medFont = fonts.medium
     bigFont = fonts.large
-
-    local screenW, screenH = love.graphics.getDimensions()
-    centerX = (screenW / 2) - (popupWidth / 2)
-    centerY = (screenH / 2) - (popupHeight / 2)
 
     xButton = {
         x = centerX + popupWidth - cancelXOffset,
@@ -589,7 +595,8 @@ function popup.draw()
     if highScorePopupShown then
         love.graphics.setColor(textColor)
         love.graphics.setFont(medFont)
-        love.graphics.print(popup.content.title, centerX + titleOffset * 2, centerY + titleOffset)
+        love.graphics.print(popup.content.title, helper.round(centerX + titleOffset * 2),
+            helper.round(centerY + titleOffset))
         love.graphics.setFont(smallFont)
         love.graphics.printf(string.format(lang[Current_lang].dialogs.high_score, popup.content.label),
             helper.round(popup.content.x), helper.round(popup.content.y + topBarHeight),
