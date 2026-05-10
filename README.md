@@ -45,9 +45,9 @@ A mostly faithful recreation of **Windows XP Minesweeper**, built with [LÖVE](h
 
 ## Fonts
 
-- This project uses NotoSansSC-Regular.ttf for Chinese text.
-- The font is licensed under the SIL Open Font License (OFL) 1.1)
-- The full license text is included in fonts/LICENSE-OFL.txt.
+This product uses the Roboto font family by Google.
+This Font is licensed under the SIL Open Font License, Version 1.1
+The full license text is included in assets/fonts/OFL.txt.
 
 ## Getting Started
 
