@@ -6,6 +6,7 @@
 local config = {
     qMarks = false,
     sound = true,
+    scaleFactor = 1,
     gridHeight = 0,
     gridWidth = 0,
     gridMines = 0,
@@ -15,6 +16,20 @@ local config = {
 function config.setConfig(option, value)
     if config[option] ~= nil then
         config[option] = value
+    end
+end
+
+function config.toggleScale()
+    config.scaleFactor = config.scaleFactor == 1 and 2 or 1
+end
+
+function config.isScaled()
+    return config.scaleFactor == 2
+end
+
+function config.setScaleFactor(value)
+    if value == 1 or value == 2 then
+        config.scaleFactor = value
     end
 end
 

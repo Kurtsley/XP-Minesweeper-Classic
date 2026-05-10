@@ -17,6 +17,7 @@ local popup = require("src.popup")
 local file_manager = require("src.file_manager")
 local sound = require("src.sound")
 local windowing = require("src.windowing")
+local config = require("src.config")
 local fonts = require("src.fonts")
 
 local gameState = state.gameState
@@ -70,6 +71,7 @@ local states = {
 
 function love.load()
     math.randomseed(os.time())
+    file_manager.load_scale()
     GameWidth, GameHeight = love.graphics.getDimensions()
 
     if love.system.getOS() == "Windows" or love.system.getOS() == "Linux" then
@@ -105,6 +107,7 @@ function love.draw()
     love.graphics.push()
     -- Drawing this color to cover up shifting tiles
     love.graphics.clear(192 / 255, 192 / 255, 192 / 255)
+    love.graphics.scale(config.scaleFactor, config.scaleFactor)
     board.draw()
     counterTimer.draw(gameState.getMineCount(), timer:getTime())
     faceButton:draw()
@@ -112,4 +115,8 @@ function love.draw()
     popup.draw()
 
     love.graphics.pop()
+end
+
+function love.quit()
+    file_manager.save_scale()
 end

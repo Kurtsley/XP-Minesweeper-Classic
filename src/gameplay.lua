@@ -49,10 +49,10 @@ function gameplay.initGame(diff)
 
     local x, y, displayIndex = love.window.getPosition()
 
-    windowing.setModeSafe(map_width, map_height)
+    windowing.setModeSafe(map_width, map_height, config.scaleFactor)
     love.window.setPosition(x, y, displayIndex)
 
-    GameWidth, GameHeight = love.graphics.getDimensions()
+    GameWidth, GameHeight = map_width, map_height
 
     gameState.newGame()
 end

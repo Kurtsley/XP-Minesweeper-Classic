@@ -61,7 +61,7 @@ local popupImage
 local alt
 
 local function within(btnX, btnY, btnW, btnH)
-    local mx, my = love.mouse.getPosition()
+    local mx, my = helper.getMousePosition()
 
     if mx > btnX and mx <= btnX + btnW and my > btnY and my <= btnY + btnH then
         return true

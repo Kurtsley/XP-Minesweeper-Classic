@@ -9,6 +9,7 @@ local gameState = state.gameState
 local difficulty = state.difficulty
 local faceButton = require("src.face")
 local config = require("src.config")
+local helper = require("src.helper")
 local level_builder = require("src.level_builder")
 local sound = require("src.sound")
 
@@ -173,7 +174,7 @@ function board.update()
     local rightReleasedWhileLeftHeld = board.mouseWasDown[2] and not mouseNow[2] and mouseNow[1]
     local middleReleasedWhileAnyHeld = board.mouseWasDown[3] and not mouseNow[3] and (mouseNow[1] or mouseNow[2])
 
-    local mouseX, mouseY = love.mouse.getPosition()
+    local mouseX, mouseY = helper.getMousePosition()
 
     -- Clear all held tiles for multi-hold
     for r = 1, #board.grid do
@@ -255,7 +256,7 @@ function board.onMousePressed(button, heldButtons)
         board.holdCanceled = true
     end
 
-    local mouseX, mouseY = love.mouse.getPosition()
+    local mouseX, mouseY = helper.getMousePosition()
 
     local col = math.floor((mouseX - Board_start_x) / tilesets.cell.size) + 1
     local row = math.floor((mouseY - Board_start_y) / tilesets.cell.size) + 1
@@ -296,7 +297,7 @@ end
 function board.onMouseReleased(button, heldButtons)
     local Tile = require("src.tile")
 
-    local mouseX, mouseY = love.mouse.getPosition()
+    local mouseX, mouseY = helper.getMousePosition()
 
     if button == 1 then
         if mouseX >= Face_x and mouseX <= Face_x + faceButton.size and

@@ -21,6 +21,7 @@ local lang = {
         options_menu = {
             marks = "&Marks (?)",
             sound = "&Sound",
+            double_size = "&2x Scale",
         },
         help_menu = {
             about = "&About",

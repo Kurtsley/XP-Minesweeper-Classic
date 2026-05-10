@@ -6,6 +6,7 @@
 local tilesets = require("src.tilesets")
 local popup = require("src.popup")
 local config = require("src.config")
+local helper = require("src.helper")
 local state = require("src.state")
 local gameState = state.gameState
 
@@ -30,7 +31,7 @@ function faceButton:update()
 
     if popup.shouldShow then return end
 
-    local mouseX, mouseY = love.mouse.getPosition()
+    local mouseX, mouseY = helper.getMousePosition()
 
     if gameState.is(gameState.GAME_OVER) then
         faceButton:setState("dead")

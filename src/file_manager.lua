@@ -16,6 +16,9 @@ local defaultTimes = {
     hard = 999.999
 }
 
+local saveName = "save.json"
+local oldSave = "times.json"
+
 local function isSystemWritable()
     local testFile = "test.txt"
 
@@ -37,11 +40,11 @@ function file_manager.init()
         popup.show("SaveError")
     end
 
-    if not love.filesystem.getInfo("times.json") then
+    if not love.filesystem.getInfo(saveName) then
         local times   = defaultTimes
 
         local endoded = json.encode(times)
-        love.filesystem.write("times.json", endoded)
+        love.filesystem.write(saveName, endoded)
     end
 end
 
@@ -77,7 +80,7 @@ function file_manager.save_times(difficulty, newTime)
     if data then
         data[difficulty] = newTime
         local encoded = json.encode(data)
-        love.filesystem.write("times.json", encoded)
+        love.filesystem.write(saveName, encoded)
     end
 end
 
@@ -98,12 +101,24 @@ function file_manager.save_difficulty(difficulty)
         end
 
         local encoded = json.encode(data)
-        love.filesystem.write("times.json", encoded)
+        love.filesystem.write(saveName, encoded)
+    end
+end
+
+function file_manager.save_scale()
+    local data = file_manager.load()
+
+    if data then
+        local scale = config.scaleFactor
+        data.scale = scale or 1
+
+        local encoded = json.encode(data)
+        love.filesystem.write(saveName, encoded)
     end
 end
 
 function file_manager.load()
-    local contents = love.filesystem.read("times.json")
+    local contents = love.filesystem.read(saveName) or love.filesystem.read(oldSave)
 
     if contents then
         local times = json.decode(contents)
@@ -113,11 +128,30 @@ function file_manager.load()
     end
 end
 
+function file_manager.load_scale()
+    local scale = 1
+
+    if love.filesystem.getInfo(saveName) then
+        local contents = love.filesystem.read(saveName)
+
+        if contents then
+            local data = json.decode(contents)
+            local lastScale = data.scale
+
+            if lastScale then
+                scale = lastScale
+            end
+        end
+    end
+
+    config.setScaleFactor(scale)
+end
+
 function file_manager.load_difficulty()
     local defaultDiff = "easy"
 
-    if love.filesystem.getInfo("times.json") then
-        local contents = love.filesystem.read("times.json")
+    if love.filesystem.getInfo(saveName) or love.filesystem.getInfo(oldSave) then
+        local contents = love.filesystem.read(saveName) or love.filesystem.read(oldSave)
 
         if contents then
             local data = json.decode(contents)

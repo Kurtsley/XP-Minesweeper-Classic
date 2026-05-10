@@ -12,6 +12,7 @@ local file_manager = require("src.file_manager")
 local lang = require("src.languages")
 local fonts = require("src.fonts")
 local helper = require("src.helper")
+local windowing = require("src.windowing")
 local gameState = state.gameState
 
 local game_menu = {}
@@ -49,7 +50,7 @@ local menuItems = {
 
 local subItems = {
     game = { x = 0, h = 205 },
-    options = { x = 50, h = 54 },
+    options = { x = 50, h = 78 },
     help = { x = 104, h = 28 },
 }
 
@@ -91,6 +92,10 @@ local function toggleSound()
 end
 
 local function checkMarkCheck(subitem)
+    if subitem.key == "doubleSize" then
+        return config.scaleFactor == 2
+    end
+
     if subitem.key then
         return subitem.key == gameState.getDifficulty()
     end
@@ -102,8 +107,20 @@ local function checkMarkCheck(subitem)
     end
 end
 
+local function toggleDoubleSize()
+    config.toggleScale()
+    local map_width = (config.gridWidth + 2) * TileSize
+    local map_height = (config.gridHeight + 5 + 1) * TileSize + MenuHeight
+
+    local x, y, displayIndex = love.window.getPosition()
+    windowing.setModeSafe(map_width, map_height, config.scaleFactor)
+    love.window.setPosition(x, y, displayIndex)
+    GameWidth, GameHeight = map_width, map_height
+    game_menu.submenuClose("Options")
+end
+
 local function withinItem(itemX, itemY, itemW, itemH)
-    local mx, my = love.mouse.getPosition()
+    local mx, my = helper.getMousePosition()
 
     if mx > itemX and mx <= itemX + itemW and my > itemY and my <= itemY + itemH then
         return true
@@ -153,6 +170,8 @@ function game_menu.onKeyPressed(key)
             elseif key == "a" then
                 game_menu.openAboutPopup()
                 gameState.resetAlt()
+            elseif key == "2" or key == "kp2" then
+                toggleDoubleSize()
             elseif key == "x" then
                 game_menu.quit()
             end
@@ -335,6 +354,21 @@ function game_menu.load()
             hoverColor = highlightBoxColor,
             check = checkMarkCheck,
             onClick = toggleSound
+        },
+        {
+            label = lang[Current_lang].options_menu.double_size,
+            x = subItems.options.x,
+            y = optionsYValues.y2 + menuHeight,
+            w = menuWidth,
+            h = menuHeight,
+            labelXOffset = subMenuXOffset,
+            labelYOffset = menuYOffset,
+            cornerRadius = cornerRadius,
+            normalColor = subItemNormalColor,
+            hoverColor = highlightBoxColor,
+            check = checkMarkCheck,
+            key = "doubleSize",
+            onClick = toggleDoubleSize
         }
     }
 
