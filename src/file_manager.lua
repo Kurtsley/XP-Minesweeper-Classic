@@ -117,6 +117,20 @@ function file_manager.save_scale()
     end
 end
 
+function file_manager.save_options()
+    local data = file_manager.load()
+
+    if data then
+        local marks = config.qMarks
+        local sound = config.sound
+        data.marks = marks == nil and false or marks
+        data.sound = sound == nil and true or sound
+
+        local encoded = json.encode(data)
+        love.filesystem.write(saveName, encoded)
+    end
+end
+
 function file_manager.load()
     local contents = love.filesystem.read(saveName) or love.filesystem.read(oldSave)
 
@@ -126,6 +140,32 @@ function file_manager.load()
     else
         return defaultTimes
     end
+end
+
+function file_manager.load_options()
+    local marks = false
+    local sound = true
+
+    if love.filesystem.getInfo(saveName) then
+        local contents = love.filesystem.read(saveName)
+
+        if contents then
+            local data = json.decode(contents)
+            local lastMarks = data.marks
+            local lastSound = data.sound
+
+            if lastMarks ~= nil then
+                marks = lastMarks
+            end
+
+            if lastSound ~= nil then
+                sound = lastSound
+            end
+        end
+    end
+
+    config.setConfig("qMarks", marks)
+    config.setConfig("sound", sound)
 end
 
 function file_manager.load_scale()

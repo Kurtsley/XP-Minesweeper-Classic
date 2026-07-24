@@ -72,6 +72,7 @@ local states = {
 function love.load()
     math.randomseed(os.time())
     file_manager.load_scale()
+    file_manager.load_options()
     GameWidth, GameHeight = love.graphics.getDimensions()
 
     if love.system.getOS() == "Windows" or love.system.getOS() == "Linux" then
@@ -119,4 +120,5 @@ end
 
 function love.quit()
     file_manager.save_scale()
+    file_manager.save_options()
 end

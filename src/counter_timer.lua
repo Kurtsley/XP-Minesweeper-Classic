@@ -76,7 +76,7 @@ function counterTimer.resetTimer()
 end
 
 function counterTimer.draw(mineCount, timerCount)
-    local timeElapsedSeconds = math.ceil(timerCount)
+    local timeElapsedSeconds = math.min(math.ceil(timerCount), 999)
     counterTimer.drawCounter(timeElapsedSeconds, timer_x1, timer_x2, timer_x3, counterY)
     counterTimer.drawCounter(mineCount, mineCounter_x1, mineCounter_x2, mineCounter_x3, counterY)
 end
