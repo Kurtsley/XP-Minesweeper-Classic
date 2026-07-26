@@ -434,13 +434,19 @@ function popup.setup(state)
     local sourceLink = "https://github.com/Kurtsley/XP-Minesweeper-Classic"
     local sourceLinkW = smallFont:getWidth(sourceLabel)
     local sourceLinkX = (GameWidth / 2) - (sourceLinkW / 2)
-    local sourceLinkY = (GameHeight / 2) - 4
+    local sourceLinkY = (GameHeight / 2) - 24
 
     local bugLabel = "Bug report"
     local bugLink = "https://forms.gle/uUYUTv3fne1waideA"
-    local bugLabelW = smallFont:getWidth(bugLabel)
-    local bugLabelX = (GameWidth / 2) - (bugLabelW / 2)
-    local bugLabelY = sourceLinkY + 14
+    local bugLinkW = smallFont:getWidth(bugLabel)
+    local bugLinkX = (GameWidth / 2) - (bugLinkW / 2)
+    local bugLinkY = sourceLinkY + 14
+
+    local gamesLabel = "More games"
+    local gamesLink = "https://apps.microsoft.com/search/publisher?name=Kurtsley&hl=en-US&gl=US"
+    local gamesLinkW = smallFont:getWidth(gamesLabel)
+    local gamesLinkX = (GameWidth / 2) - (gamesLinkW / 2)
+    local gamesLinkY = bugLinkY + 24
 
     linkButtons = {
         {
@@ -459,9 +465,21 @@ function popup.setup(state)
             id = "bug",
             label = bugLabel,
             link = bugLink,
-            x = bugLabelX,
-            y = bugLabelY,
-            w = bugLabelW,
+            x = bugLinkX,
+            y = bugLinkY,
+            w = bugLinkW,
+            h = linkH,
+            color = linkColor,
+            hover = linkHoverColor,
+            onClick = clickLink
+        },
+        {
+            id = "games",
+            label = gamesLabel,
+            link = gamesLink,
+            x = gamesLinkX,
+            y = gamesLinkY,
+            w = gamesLinkW,
             h = linkH,
             color = linkColor,
             hover = linkHoverColor,
@@ -500,7 +518,7 @@ function popup.setup(state)
         local aboutLabel = string.format("Version %s\nCopyright (c) 2025-2026 Kurtsley", config.version)
         local aboutW = smallFont:getWidth(aboutLabel)
         local aboutX = (GameWidth / 2) - (aboutW / 2)
-        local aboutY = (GameHeight / 2) - 38
+        local aboutY = (GameHeight / 2) - 58
 
         popup.content = {
             title = aboutTitle,
