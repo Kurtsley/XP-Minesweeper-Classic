@@ -55,8 +55,10 @@ Simply grab the release for you OS from the releases page and run, or download L
 
 Now available on the Microsoft Store and itch.io!
 
-[![Microsoft Store!](https://get.microsoft.com/images/en-us%20dark.svg)](https://apps.microsoft.com/detail/9N926V9NSPZF)
-
+<a href="https://apps.microsoft.com/detail/9N926V9NSPZF?referrer=appbadge&mode=full" target="_blank"  rel="noopener noreferrer">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
+</a>
+<br/>
 <a href="https://kurtsley.itch.io/xp-minesweeper-classic">
   <img src="https://static.itch.io/images/badge.svg" alt="Download on itch.io" width="150"/>
 </a>
@@ -64,3 +66,11 @@ Now available on the Microsoft Store and itch.io!
 ## About This Project
 
 This project is my way of practicing game development and learning the LÖVE (Love2D) framework. I wanted to recreate the classic Windows XP Minesweeper as a way to build my skills with Lua, graphics handling, and game logic. This is for fun and not a professional product in any way.
+
+## Additional Projects
+
+If you enjoy this project, check out Pastel Sweeper, a modernized version with improved visuals, smoother gameplay, and additional quality-of-life improvements, available on the Microsoft Store.
+
+<a href="https://apps.microsoft.com/detail/9NGTDV4GLJPW?referrer=appbadge&mode=full" target="_blank"  rel="noopener noreferrer">
+	<img src="https://get.microsoft.com/images/en-us%20dark.svg" width="200"/>
+</a>
