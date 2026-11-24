@@ -81,7 +81,7 @@ jobs:
           mv msxp-classic.love build/msxp-classic.love
 
       - name: Build Windows packages
-        uses: love-actions/love-actions-windows@v1
+        uses: love-actions/love-actions-windows@v2.1.1
         with:
           love-package: ${{ env.CORE_LOVE_PACKAGE_PATH }}
           icon-path: ./assets/icons/icon.ico
