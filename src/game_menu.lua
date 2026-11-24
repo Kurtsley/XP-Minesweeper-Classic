@@ -108,13 +108,15 @@ local function checkMarkCheck(subitem)
 end
 
 local function toggleDoubleSize()
+    local map_width, map_height = windowing.mapSize(config.gridHeight, config.gridWidth)
+
     config.toggleScale()
-    local map_width = (config.gridWidth + 2) * TileSize
-    local map_height = (config.gridHeight + 5 + 1) * TileSize + MenuHeight
+    fonts.load()
 
     local x, y, displayIndex = love.window.getPosition()
     windowing.setModeSafe(map_width, map_height, config.scaleFactor)
     love.window.setPosition(x, y, displayIndex)
+    windowing.keepOnScreen()
     GameWidth, GameHeight = map_width, map_height
     game_menu.submenuClose("Options")
 end
@@ -192,7 +194,13 @@ end
 function game_menu.onMouseReleased(button)
     if popup.shouldShow then return end
 
-    if button ~= 1 then return false end
+    if button ~= 1 then
+        if game_menu.anySubmenuOpen() then
+            game_menu.closeAllSubmenus()
+            return "closed"
+        end
+        return false
+    end
 
     if button == 1 then
         for _, item in ipairs(items) do
@@ -667,6 +675,7 @@ function game_menu.drawSubMenu(menu)
 end
 
 function game_menu.draw()
+    font = fonts.menu
     love.graphics.setFont(font)
 
     -- Main menu

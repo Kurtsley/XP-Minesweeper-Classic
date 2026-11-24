@@ -183,8 +183,14 @@ local function drawTile(type, x, y, side)
     end
 end
 
+local cachedMap, cachedRows, cachedCols
+
 function level_builder.drawMap(rows, cols)
-    local uiMap = level_builder.buildMap(rows, cols)
+    if not cachedMap or cachedRows ~= rows or cachedCols ~= cols then
+        cachedMap = level_builder.buildMap(rows, cols)
+        cachedRows, cachedCols = rows, cols
+    end
+    local uiMap = cachedMap
 
     for y, row in ipairs(uiMap) do
         for x, cell in ipairs(row) do

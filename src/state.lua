@@ -76,11 +76,11 @@ function gameState.isDifficulty(difficulty)
 end
 
 function gameState.decrementMinecount()
-    mineCount = math.max(-99, mineCount - 1)
+    mineCount = mineCount - 1
 end
 
 function gameState.incrementMinecount()
-    mineCount = math.min(999, mineCount + 1)
+    mineCount = mineCount + 1
 end
 
 function gameState.getMineCount()
@@ -102,6 +102,7 @@ end
 function gameState.newGame()
     InitGame = false
     gameState.changeState(gameState.NEW_GAME)
+    require("src.gameplay").newGame()
 end
 
 function gameState.isAltPressed()

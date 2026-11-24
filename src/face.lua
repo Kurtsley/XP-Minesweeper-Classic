@@ -13,6 +13,7 @@ local gameState = state.gameState
 local faceButton = {
     state = "normal",
     pressed = false,
+    armed = false,
     x = Face_x,
     y = Face_y,
     size = 28
@@ -26,12 +27,13 @@ function faceButton:setPressed(value)
     self.pressed = value
 end
 
+function faceButton.isOver(x, y)
+    return x >= Face_x and x < Face_x + faceButton.size and
+        y >= Face_y and y < Face_y + faceButton.size
+end
+
 function faceButton:update()
     local game_menu = require("src.game_menu")
-
-    if popup.shouldShow then return end
-
-    local mouseX, mouseY = helper.getMousePosition()
 
     if gameState.is(gameState.GAME_OVER) then
         faceButton:setState("dead")
@@ -41,13 +43,17 @@ function faceButton:update()
         faceButton:setState("normal")
     end
 
-    if mouseX >= Face_x and mouseX <= Face_x + faceButton.size and
-        mouseY >= Face_y and mouseY <= Face_y + faceButton.size then
-        if love.mouse.isDown(1) then
-            self.pressed = true
-        else
-            self.pressed = false
-        end
+    if popup.shouldShow then
+        self.pressed = false
+        return
+    end
+
+    local mouseX, mouseY = helper.getMousePosition()
+
+    if faceButton.isOver(mouseX, mouseY) then
+        self.pressed = self.armed and love.mouse.isDown(1) or false
+    elseif self.armed then
+        self.pressed = false
     else
         self.pressed = false
 
@@ -55,8 +61,8 @@ function faceButton:update()
         local cols = config.gridWidth
 
         if not (gameState.is(gameState.GAME_OVER) or gameState.is(gameState.VICTORY) or game_menu.anySubmenuOpen()) then
-            if mouseX >= Board_start_x and mouseX <= Board_start_x + cols * tilesets.cell.size and
-                mouseY >= Board_start_y and mouseY <= Board_start_y + rows * tilesets.cell.size then
+            if mouseX >= Board_start_x and mouseX < Board_start_x + cols * tilesets.cell.size and
+                mouseY >= Board_start_y and mouseY < Board_start_y + rows * tilesets.cell.size then
                 if love.mouse.isDown(1) then
                     faceButton:setState("surprise")
                 end

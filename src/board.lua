@@ -56,19 +56,30 @@ function board.initBoard()
     end
 end
 
+local dirs = {
+    { -1, 1 },
+    { -1, 0 },
+    { -1, -1 },
+    { 0,  -1 },
+    { 1,  -1 },
+    { 1,  0 },
+    { 1,  1 },
+    { 0,  1 },
+}
+
+function board.tileAt(x, y)
+    local col = math.floor((x - Board_start_x) / tilesets.cell.size) + 1
+    local row = math.floor((y - Board_start_y) / tilesets.cell.size) + 1
+
+    if board.grid and row >= 1 and row <= #board.grid and col >= 1 and col <= #board.grid[1] then
+        return row, col
+    end
+
+    return nil
+end
+
 function board.getAdjacentTiles(row, col)
     local adjacentTiles = {}
-
-    local dirs = {
-        { -1, 1 },
-        { -1, 0 },
-        { -1, -1 },
-        { 0,  -1 },
-        { 1,  -1 },
-        { 1,  0 },
-        { 1,  1 },
-        { 0,  1 },
-    }
 
     for _, dir in ipairs(dirs) do
         local dx, dy = dir[1], dir[2]
@@ -129,9 +140,9 @@ function board.addMinesExcluding(safeRow, safeCol)
 
     rows = config.gridHeight
     cols = config.gridWidth
-    minesToStart = config.gridMines
+    minesToStart = math.min(config.gridMines, rows * cols - 1)
 
-    while minesToStart ~= 0 do
+    while minesToStart > 0 do
         local row = math.random(1, rows)
         local col = math.random(1, cols)
 
@@ -190,39 +201,29 @@ function board.update()
         return
     end
 
-    for r = 1, #board.grid do
-        for c = 1, #board.grid[r] do
-            local tile = board.grid[r][c]
-            local adjacentTiles = board.getAdjacentTiles(r, c)
+    local row, col = board.tileAt(mouseX, mouseY)
 
-            local tileX = Board_start_x + (c - 1) * tilesets.cell.size
-            local tileY = Board_start_y + (r - 1) * tilesets.cell.size
-            local tileWidth = tilesets.cell.size
-            local tileHeight = tilesets.cell.size
+    if faceButton.armed then
+        row = nil
+    end
 
-            if mouseX > tileX and mouseX <= tileX + tileWidth and
-                mouseY > tileY and mouseY <= tileY + tileHeight then
-                -- Cheat pixel
-                if tile.isMine then
-                    CheatMineHover = true
-                else
-                    CheatMineHover = false
-                end
+    if row then
+        local tile = board.grid[row][col]
 
-                if (love.mouse.isDown(1) and love.mouse.isDown(2)) or love.mouse.isDown(3) then
-                    for _, tile in ipairs(adjacentTiles) do
-                        if not tile.isFlagged then
-                            tile.isHeld = true
-                        end
-                    end
-                end
-                if (love.mouse.isDown(1) or love.mouse.isDown(3)) and not tile.isFlagged then
-                    tile.isHeld = true
-                else
-                    tile.isHeld = false
+        -- Cheat pixel
+        CheatMineHover = tile.isMine
+
+        if (mouseNow[1] and mouseNow[2]) or mouseNow[3] then
+            for _, adTile in ipairs(board.getAdjacentTiles(row, col)) do
+                if not adTile.isFlagged then
+                    adTile.isHeld = true
                 end
             end
         end
+
+        tile.isHeld = (mouseNow[1] or mouseNow[3]) and not tile.isFlagged
+    else
+        CheatMineHover = false
     end
 
     board.mouseWasDown[1] = mouseNow[1]
@@ -247,7 +248,7 @@ function board.onMousePressed(button, heldButtons)
     local game_menu = require("src.game_menu")
     local popup = require("src.popup")
 
-    if gameState.is(gameState.GAME_OVER) or gameState.is(gameState.VICTORY) or game_menu.gameSubMenuOpen or popup.shouldShow then
+    if gameState.is(gameState.GAME_OVER) or gameState.is(gameState.VICTORY) or game_menu.anySubmenuOpen() or popup.shouldShow then
         return
     end
 
@@ -257,11 +258,9 @@ function board.onMousePressed(button, heldButtons)
     end
 
     local mouseX, mouseY = helper.getMousePosition()
+    local row, col = board.tileAt(mouseX, mouseY)
 
-    local col = math.floor((mouseX - Board_start_x) / tilesets.cell.size) + 1
-    local row = math.floor((mouseY - Board_start_y) / tilesets.cell.size) + 1
-
-    if row >= 1 and row <= #board.grid and col >= 1 and col <= #board.grid[1] then
+    if row then
         local tile = board.grid[row][col]
 
         if tile then
@@ -299,21 +298,20 @@ function board.onMouseReleased(button, heldButtons)
 
     local mouseX, mouseY = helper.getMousePosition()
 
-    if button == 1 then
-        if mouseX >= Face_x and mouseX <= Face_x + faceButton.size and
-            mouseY >= Face_y and mouseY <= Face_y + faceButton.size then
+    if button == 1 and faceButton.armed then
+        if faceButton.isOver(mouseX, mouseY) then
             gameState.newGame()
         end
+        return
     end
 
     if gameState.is(gameState.GAME_OVER) or gameState.is(gameState.VICTORY) then
         return
     end
 
-    local col = math.floor((mouseX - Board_start_x) / tilesets.cell.size) + 1
-    local row = math.floor((mouseY - Board_start_y) / tilesets.cell.size) + 1
+    local row, col = board.tileAt(mouseX, mouseY)
 
-    if row >= 1 and row <= #board.grid and col >= 1 and col <= #board.grid[1] then
+    if row then
         local tile = board.grid[row][col]
         local adjacentTiles = board.getAdjacentTiles(row, col)
 
@@ -324,6 +322,9 @@ function board.onMouseReleased(button, heldButtons)
 
                     if tile.adjacentMines == flaggedTiles then
                         for _, adTile in ipairs(adjacentTiles) do
+                            if gameState.is(gameState.GAME_OVER) then
+                                break
+                            end
                             if not adTile.isFlagged then
                                 Tile.revealTile(adTile.row, adTile.col)
                             end

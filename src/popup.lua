@@ -78,6 +78,12 @@ local function updatePopupCoords()
     centerY = ((screenH / scaleFactor) - popupHeight) / 2
 end
 
+local function refreshFonts()
+    smallFont = fonts.small
+    medFont = fonts.medium
+    bigFont = fonts.large
+end
+
 local function clearInputBoxes()
     for _, box in pairs(inputBoxes) do
         box.active = false
@@ -93,7 +99,7 @@ function popup.onMouseReleased(button)
                     return
                 end
             end
-            for _, btn in ipairs(buttons) do
+            for _, btn in ipairs(popup.content.buttons or {}) do
                 if within(btn.x, btn.y + topBarHeight, btn.w, btn.h) then
                     if btn.onClick then
                         btn.onClick()
@@ -213,9 +219,7 @@ function popup.load()
 
     updatePopupCoords()
 
-    smallFont = fonts.small
-    medFont = fonts.medium
-    bigFont = fonts.large
+    refreshFonts()
 
     xButton = {
         x = centerX + popupWidth - cancelXOffset,
@@ -327,6 +331,7 @@ function popup.onClickCancel()
 end
 
 function popup.setup(state)
+    refreshFonts()
     alt = false
     state = state or nil
 
@@ -580,6 +585,7 @@ end
 
 function popup.draw()
     if not popup.shouldShow then return end
+    refreshFonts()
 
     local cancelColor, XColor
 

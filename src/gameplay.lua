@@ -36,14 +36,19 @@ function gameplay.initGame(diff)
         config.setConfig("gridMines", HardMines)
     elseif diff == "custom" then
         gameState.setDifficulty(difficulty.CUSTOM)
+
+        local maxCols, maxRows = windowing.maxGrid(1)
+        local width = math.max(9, math.min(config.gridWidth, 99, maxCols))
+        local height = math.max(9, math.min(config.gridHeight, 99, maxRows))
+        local mines = math.max(10, math.min(config.gridMines, (width - 1) * (height - 1)))
+        config.setConfig("gridWidth", width)
+        config.setConfig("gridHeight", height)
+        config.setConfig("gridMines", mines)
     else
         error("Invalid difficulty")
     end
 
-    gameplay.newGame()
-
-    local map_width = (config.gridWidth + 2) * TileSize
-    local map_height = (config.gridHeight + 5 + 1) * TileSize + MenuHeight
+    local map_width, map_height = windowing.mapSize(config.gridHeight, config.gridWidth)
 
     Face_x = (map_width / 2) - 14
 
@@ -51,6 +56,7 @@ function gameplay.initGame(diff)
 
     windowing.setModeSafe(map_width, map_height, config.scaleFactor)
     love.window.setPosition(x, y, displayIndex)
+    windowing.keepOnScreen()
 
     GameWidth, GameHeight = map_width, map_height
 
@@ -71,6 +77,7 @@ function gameplay.playGame()
             popup.show("HighScore")
         end
         gameState.changeState(gameState.VICTORY)
+        gameplay.victory()
         sound.play("clap")
     end
 end
@@ -104,7 +111,7 @@ function gameplay.gameOver()
     for r = 1, #board.grid do
         for c = 1, #board.grid[r] do
             local tile = board.grid[r][c]
-            if tile.isCovered and tile.isMine then
+            if tile.isCovered and tile.isMine and not tile.isFlagged then
                 tile.isCovered = false
             end
             if tile.isFlagged and not tile.isMine then

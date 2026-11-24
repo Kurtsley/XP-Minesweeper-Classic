@@ -19,6 +19,30 @@ local defaultTimes = {
 local saveName = "save.json"
 local oldSave = "times.json"
 
+local validDifficulties = { easy = true, medium = true, hard = true, custom = true }
+
+local function copyDefaults()
+    local t = {}
+    for k, v in pairs(defaultTimes) do
+        t[k] = v
+    end
+    return t
+end
+
+local function safeDecode(contents)
+    if type(contents) ~= "string" then return nil end
+    local ok, data = pcall(json.decode, contents)
+    if ok and type(data) == "table" then
+        return data
+    end
+    return nil
+end
+
+local function clampInt(value, min, max)
+    value = math.floor(tonumber(value) or min)
+    return math.max(min, math.min(max, value))
+end
+
 local function isSystemWritable()
     local testFile = "test.txt"
 
@@ -40,11 +64,12 @@ function file_manager.init()
         popup.show("SaveError")
     end
 
-    if not love.filesystem.getInfo(saveName) then
-        local times   = defaultTimes
-
-        local endoded = json.encode(times)
-        love.filesystem.write(saveName, endoded)
+    local existing = love.filesystem.read(saveName)
+    if not safeDecode(existing) then
+        if existing and not love.filesystem.getInfo(saveName .. ".bak") then
+            love.filesystem.write(saveName .. ".bak", existing)
+        end
+        love.filesystem.write(saveName, json.encode(file_manager.load()))
     end
 end
 
@@ -54,21 +79,17 @@ function file_manager.isHighScore(time, difficulty)
 
     local times = file_manager.load()
 
-    if times then
-        if time < times[difficulty] then
-            return true
-        end
-    end
-
-    return false
+    return time < times[difficulty]
 end
 
 function file_manager.resetScores()
-    local times = defaultTimes
+    local data = file_manager.load()
 
-    for diff, time in pairs(times) do
-        file_manager.save_times(diff, time)
+    for diff, time in pairs(defaultTimes) do
+        data[diff] = time
     end
+
+    love.filesystem.write(saveName, json.encode(data))
 end
 
 function file_manager.save_times(difficulty, newTime)
@@ -132,36 +153,28 @@ function file_manager.save_options()
 end
 
 function file_manager.load()
-    local contents = love.filesystem.read(saveName) or love.filesystem.read(oldSave)
+    local data = safeDecode(love.filesystem.read(saveName))
+        or safeDecode(love.filesystem.read(oldSave))
+        or copyDefaults()
 
-    if contents then
-        local times = json.decode(contents)
-        return times
-    else
-        return defaultTimes
+    for diff, time in pairs(defaultTimes) do
+        data[diff] = tonumber(data[diff]) or time
     end
+
+    return data
 end
 
 function file_manager.load_options()
+    local data = file_manager.load()
     local marks = false
     local sound = true
 
-    if love.filesystem.getInfo(saveName) then
-        local contents = love.filesystem.read(saveName)
+    if type(data.marks) == "boolean" then
+        marks = data.marks
+    end
 
-        if contents then
-            local data = json.decode(contents)
-            local lastMarks = data.marks
-            local lastSound = data.sound
-
-            if lastMarks ~= nil then
-                marks = lastMarks
-            end
-
-            if lastSound ~= nil then
-                sound = lastSound
-            end
-        end
+    if type(data.sound) == "boolean" then
+        sound = data.sound
     end
 
     config.setConfig("qMarks", marks)
@@ -169,46 +182,37 @@ function file_manager.load_options()
 end
 
 function file_manager.load_scale()
-    local scale = 1
+    local data = file_manager.load()
 
-    if love.filesystem.getInfo(saveName) then
-        local contents = love.filesystem.read(saveName)
-
-        if contents then
-            local data = json.decode(contents)
-            local lastScale = data.scale
-
-            if lastScale then
-                scale = lastScale
-            end
-        end
-    end
-
-    config.setScaleFactor(scale)
+    config.setScaleFactor(data.scale or 1)
 end
 
 function file_manager.load_difficulty()
     local defaultDiff = "easy"
+    local data = file_manager.load()
+    local lastDiff = data.last_difficulty
 
-    if love.filesystem.getInfo(saveName) or love.filesystem.getInfo(oldSave) then
-        local contents = love.filesystem.read(saveName) or love.filesystem.read(oldSave)
-
-        if contents then
-            local data = json.decode(contents)
-            local lastDiff = data.last_difficulty or defaultDiff
-            local customBoard = data.custom_board
-
-            if lastDiff == "custom" and customBoard then
-                config.setConfig("gridWidth", customBoard.width)
-                config.setConfig("gridHeight", customBoard.height)
-                config.setConfig("gridMines", customBoard.mines)
-            end
-
-            return lastDiff
-        end
+    if not validDifficulties[lastDiff] then
+        return defaultDiff
     end
 
-    return defaultDiff
+    if lastDiff == "custom" then
+        local customBoard = data.custom_board
+
+        if type(customBoard) ~= "table" then
+            return defaultDiff
+        end
+
+        local width = clampInt(customBoard.width, 9, 99)
+        local height = clampInt(customBoard.height, 9, 99)
+        local mines = clampInt(customBoard.mines, 10, (width - 1) * (height - 1))
+
+        config.setConfig("gridWidth", width)
+        config.setConfig("gridHeight", height)
+        config.setConfig("gridMines", mines)
+    end
+
+    return lastDiff
 end
 
 return file_manager

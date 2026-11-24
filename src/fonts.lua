@@ -5,15 +5,23 @@
 
 local fonts = {}
 
+local config = require("src.config")
+
 local fontPath = "assets/fonts/Roboto-Regular.ttf"
 
+local loadedScale
+
 function fonts.load()
+    local scale = config.scaleFactor or 1
+    if loadedScale == scale then return end
+    loadedScale = scale
+
     love.graphics.setDefaultFilter("nearest", "nearest")
 
-    fonts.menu = love.graphics.newFont(fontPath, 12)
-    fonts.small = love.graphics.newFont(fontPath, 10)
-    fonts.medium = love.graphics.newFont(fontPath, 14)
-    fonts.large = love.graphics.newFont(fontPath, 20)
+    fonts.menu = love.graphics.newFont(fontPath, 12, "normal", scale)
+    fonts.small = love.graphics.newFont(fontPath, 10, "normal", scale)
+    fonts.medium = love.graphics.newFont(fontPath, 14, "normal", scale)
+    fonts.large = love.graphics.newFont(fontPath, 20, "normal", scale)
 end
 
 return fonts
